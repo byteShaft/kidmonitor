@@ -17,12 +17,9 @@ public class LocationService extends ContextWrapper implements LocationListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
         GoogleApiClient mGoogleApiClient;
-        private int mLocationRecursionCounter = 0;
         private int mLocationChangedCounter = 0;
         private LocationRequest mLocationRequest;
         public Location mLocation;
-        String lat;
-        String lon;
 
         public LocationService(Context context) {
                 super(context);
