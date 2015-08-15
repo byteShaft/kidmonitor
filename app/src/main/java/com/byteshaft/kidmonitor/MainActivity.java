@@ -1,6 +1,7 @@
 package com.byteshaft.kidmonitor;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -28,12 +29,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        startService(new Intent(this, CallListenerService.class));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mLocationService.mGoogleApiClient.isConnected()) {
+        if (mLocationService != null && mLocationService.mGoogleApiClient.isConnected()) {
             mLocationService.stopLocationService();
         }
     }
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (mLocationService.mGoogleApiClient.isConnected()) {
+        if (mLocationService != null && mLocationService.mGoogleApiClient.isConnected()) {
             mLocationService.stopLocationService();
         }
     }
