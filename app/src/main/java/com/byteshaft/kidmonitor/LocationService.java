@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -12,17 +13,14 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationListener;
 
-
 public class LocationService extends ContextWrapper implements LocationListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
         GoogleApiClient mGoogleApiClient;
-        private int mLocationRecursionCounter = 0;
         private int mLocationChangedCounter = 0;
         private LocationRequest mLocationRequest;
         public Location mLocation;
-        String lat;
-        String lon;
+        private CountDownTimer mTimer;
 
         public LocationService(Context context) {
                 super(context);
@@ -56,8 +54,8 @@ public class LocationService extends ContextWrapper implements LocationListener,
                 LocationServices.FusedLocationApi.removeLocationUpdates(
                         mGoogleApiClient, this);
                 mGoogleApiClient.disconnect();
+                locationTimer().cancel();
         }
-
 
         @Override
         public void onConnected(Bundle bundle) {
@@ -71,20 +69,43 @@ public class LocationService extends ContextWrapper implements LocationListener,
 
         @Override
         public void onLocationChanged(Location location) {
+            Log.i("TrackBuddy", "onLocationChanged CALLED..." + mLocationChangedCounter);
                 mLocationChangedCounter++;
                 if (mLocationChangedCounter == 3) {
-                        mLocation = location;
-                        String lat = String.valueOf(mLocation.getLatitude());
-                        String lon = String.valueOf(mLocation.getLongitude());
-                        Log.i("Tatti", lat + ", " + lon);
-                        stopLocationService();
+                    mLocation = location;
+                    String lat = String.valueOf(mLocation.getLatitude());
+                    String lon = String.valueOf(mLocation.getLongitude());
+                    Log.i("Location", lat + ", " + lon);
+                    /* TODO: Implement Location Response */
+                    stopLocationService();
+                    mLocationChangedCounter = 0;
                 }
-                Log.i("TrackBuddy", "onLocationChanged CALLED..." + mLocationChangedCounter);
-
         }
 
         @Override
         public void onConnectionFailed(ConnectionResult connectionResult) {
 
         }
+
+    public CountDownTimer locationTimer() {
+
+        if (mTimer == null) {
+            mTimer = new CountDownTimer(120000, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    Log.i("Location", "Timer: " + millisUntilFinished / 1000);
+                }
+
+                @Override
+                public void onFinish() {
+                    if (mGoogleApiClient.isConnected()) {
+                        stopLocationService();
+                        Log.i("Location", "Location cannot be acquired.");
+                            /* TODO: Implement Response */
+                    }
+                }
+            };
+        }
+        return mTimer;
+    }
 }
