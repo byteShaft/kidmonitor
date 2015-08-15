@@ -23,7 +23,11 @@ public class AppGlobals extends Application {
     public static String getDataDirectory(String type) {
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath();
         String dataDirectory = sdcard + "/Android/data/";
-        String directoryPath = dataDirectory + sContext.getPackageName() + "/" + type;
+        String directoryPath = dataDirectory
+                + sContext.getPackageName()
+                + File.separator
+                + type
+                + File.separator;
         File file = new File(directoryPath);
         if (!file.exists()) {
             file.mkdirs();
