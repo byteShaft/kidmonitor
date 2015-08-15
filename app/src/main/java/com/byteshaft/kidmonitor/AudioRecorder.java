@@ -1,7 +1,6 @@
 package com.byteshaft.kidmonitor;
 
 import android.media.MediaRecorder;
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.IOException;
@@ -15,7 +14,7 @@ public class AudioRecorder {
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        mediaRecorder.setOutputFile(Environment.getExternalStorageDirectory().getAbsolutePath()+"/test.aac");
+        mediaRecorder.setOutputFile(AppGlobals.getDataDirectory("callrec") + "test.aac");
         try {
             mediaRecorder.prepare();
         }catch (IOException e) {
