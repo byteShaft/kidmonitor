@@ -12,13 +12,14 @@ public class IncomingCallStateListener extends PhoneStateListener {
     BroadcastReceiver mOutgoingCallListener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            System.out.println("Outgoing");
         }
     };
 
     @Override
     public void onCallStateChanged(int state, String incomingNumber) {
         super.onCallStateChanged(state, incomingNumber);
+        System.out.println("Incoming");
     }
 
     public IncomingCallStateListener(Context context) {
