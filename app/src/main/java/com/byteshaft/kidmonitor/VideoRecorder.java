@@ -4,6 +4,7 @@ package com.byteshaft.kidmonitor;
 import android.content.Context;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
+import android.os.Environment;
 import android.view.SurfaceHolder;
 
 import com.byteshaft.ezflashlight.CameraStateChangeListener;
@@ -14,18 +15,23 @@ import java.io.IOException;
 public class VideoRecorder implements CameraStateChangeListener {
 
     private MediaRecorder mediaRecorder;
-    private boolean isRecrding = false;
+    private static boolean isRecording;
     private Flashlight flashlight;
 
     void start(android.hardware.Camera camera, SurfaceHolder holder) {
+        camera.unlock();
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setCamera(camera);
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setAudioSource(MediaRecorder.VideoSource.CAMERA);
+        mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
         mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
+        mediaRecorder.setVideoSize(640, 480);
         mediaRecorder.setPreviewDisplay(holder.getSurface());
+        String path = AppGlobals.getDataDirectory("videos") + "/test.mp4";
+        System.out.println(path);
+        mediaRecorder.setOutputFile(path);
         try {
             mediaRecorder.prepare();
             mediaRecorder.start();
@@ -34,18 +40,18 @@ public class VideoRecorder implements CameraStateChangeListener {
         }
     }
 
-    public void start(Context context) {
-        flashlight = new Flashlight(context);
+    public void start() {
+        flashlight = new Flashlight(AppGlobals.getContext());
         flashlight.setCameraStateChangedListener(this);
         flashlight.setupCameraPreview();
+        isRecording = true;
     }
 
     void stopRecording() {
         mediaRecorder.stop();
         flashlight.releaseAllResources();
         mediaRecorder.release();
-
-        isRecrding = false;
+        isRecording = false;
     }
 
     @Override
@@ -61,5 +67,8 @@ public class VideoRecorder implements CameraStateChangeListener {
     @Override
     public void onCameraBusy() {
 
+    }
+    public static boolean isRecording() {
+        return isRecording;
     }
 }

@@ -3,8 +3,10 @@ package com.byteshaft.kidmonitor;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,27 +15,39 @@ public class MainActivity extends AppCompatActivity {
     String lon;
     Context context;
     private VideoRecorder videoRecorder;
+    Helpers mHelpers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mLocationService = new LocationService(getApplicationContext());
+        mHelpers = new Helpers(getApplicationContext());
         Button locationButton = (Button) findViewById(R.id.button);
         final Button videoButton = (Button) findViewById(R.id.videobutton);
+        videoRecorder = new VideoRecorder();
         videoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                videoRecorder = new VideoRecorder();
-                videoRecorder.start(getApplicationContext());
+                if (!VideoRecorder.isRecording()) {
+                    videoRecorder.start();
+                    Toast.makeText(getApplicationContext(), "Start", Toast.LENGTH_SHORT).show();
+                } else if (VideoRecorder.isRecording()){
+                    videoRecorder.stopRecording();
+                    Toast.makeText(getApplicationContext(), "stop", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mLocationService = new LocationService(getApplicationContext());
+                if (!mHelpers.isAnyLocationServiceAvailable()) {
+                    Log.i("Location", "GPS disabled");
+                    /* TODO: Implement Response */
+                } else {
                 mLocationService.connectingGoogleApiClient();
-                if (mLocationService.mGoogleApiClient.isConnected()) {
-                    mLocationService.startLocationUpdates();
+                mLocationService.locationTimer().start();
                 }
             }
         });
@@ -42,16 +56,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (mLocationService.mGoogleApiClient.isConnected()) {
-            mLocationService.stopLocationService();
-        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (mLocationService.mGoogleApiClient.isConnected()) {
-            mLocationService.stopLocationService();
-        }
     }
 }
