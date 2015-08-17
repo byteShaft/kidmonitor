@@ -32,6 +32,7 @@ public class AppGlobals extends Application {
         if (!file.exists()) {
             file.mkdirs();
         }
+        System.out.println(file.getAbsolutePath());
         return file.getAbsolutePath();
     }
 }

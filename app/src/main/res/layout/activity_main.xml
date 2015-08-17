@@ -26,10 +26,17 @@
         android:layout_gravity="center_vertical" />
 
     <Button
+        android:id="@+id/videobutton"
+        android:text="Video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Call Recording"
         android:id="@+id/button3"
         android:layout_gravity="center_vertical" />
+
 </LinearLayout>
