@@ -75,6 +75,7 @@ public class LocationService extends ContextWrapper implements LocationListener,
                     mLocation = location;
                     String lat = String.valueOf(mLocation.getLatitude());
                     String lon = String.valueOf(mLocation.getLongitude());
+                    String GoogleMapsLink = "https://maps.google.com/maps?q=" + lat + lon;
                     Log.i("Location", lat + ", " + lon);
                     /* TODO: Implement Location Response */
                     stopLocationService();
