@@ -5,29 +5,31 @@ import android.util.Log;
 
 import java.io.IOException;
 
-public class AudioRecorder {
+public class AudioRecorder extends MediaRecorder {
 
-    MediaRecorder mediaRecorder;
-
-    public void startRecording() {
-        mediaRecorder = new MediaRecorder();
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        mediaRecorder.setOutputFile(AppGlobals.getDataDirectory("callrec") + "test.aac");
+    public void record(int time) {
+        setAudioSource(MediaRecorder.AudioSource.MIC);
+        setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+        setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         try {
-            mediaRecorder.prepare();
+            prepare();
         }catch (IOException e) {
             Log.e("Error", "Tatti occurred");
         }
-        mediaRecorder.start();
+        start();
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stop();
+            }
+        }, time);
 
     }
 
-    public void stopRecording() {
-        mediaRecorder.stop();
-        mediaRecorder.reset();
-        mediaRecorder.release();
+    @Override
+    public void stop() throws IllegalStateException {
+        super.stop();
+        reset();
+        release();
     }
-
 }

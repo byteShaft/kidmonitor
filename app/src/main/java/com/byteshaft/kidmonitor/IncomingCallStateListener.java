@@ -27,6 +27,11 @@ public class IncomingCallStateListener extends PhoneStateListener {
                 System.out.println("IDLE");
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
+                Helpers helpers = new Helpers(mContext);
+                String path = AppGlobals.getDataDirectory("callrec") +  "/" + helpers.getTimeStamp()+ ".aac";
+                AudioRecorder recorder = new AudioRecorder();
+                recorder.setOutputFile(path);
+                recorder.record(5000);
                 System.out.println("OFFHOOK");
                 break;
         }

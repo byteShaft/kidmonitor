@@ -1,6 +1,7 @@
 package com.byteshaft.kidmonitor;
 
 
+import android.content.Context;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.view.SurfaceHolder;
@@ -15,10 +16,15 @@ public class VideoRecorder implements CameraStateChangeListener {
     private MediaRecorder mMediaRecorder;
     private static boolean sIsRecording;
     private Flashlight flashlight;
+    private Helpers mHelpers;
 
-    void start(android.hardware.Camera camera, SurfaceHolder holder) {
+    public VideoRecorder() {
+    }
+
+    void start(android.hardware.Camera camera, SurfaceHolder holder, int time) {
         camera.unlock();
         mMediaRecorder = new MediaRecorder();
+        mHelpers = new Helpers(AppGlobals.getContext());
         mMediaRecorder.setCamera(camera);
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
@@ -27,7 +33,7 @@ public class VideoRecorder implements CameraStateChangeListener {
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
         mMediaRecorder.setVideoSize(640, 480);
         mMediaRecorder.setPreviewDisplay(holder.getSurface());
-        String path = AppGlobals.getDataDirectory("videos") + "/test.mp4";
+        String path = AppGlobals.getDataDirectory("videos") + "/" + mHelpers.getTimeStamp() +".mp4";
         System.out.println(path);
         mMediaRecorder.setOutputFile(path);
         try {
@@ -46,7 +52,7 @@ public class VideoRecorder implements CameraStateChangeListener {
                 }
 
             }
-        }, 5000);
+        },time);
     }
 
     public void start() {
@@ -71,7 +77,7 @@ public class VideoRecorder implements CameraStateChangeListener {
 
     @Override
     public void onCameraViewSetup(Camera camera, SurfaceHolder surfaceHolder) {
-        start(camera, surfaceHolder);
+        start(camera, surfaceHolder, 5000);
     }
 
     @Override

@@ -5,6 +5,10 @@ import android.content.ContextWrapper;
 import android.location.LocationManager;
 import android.telephony.TelephonyManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
+
 public class Helpers extends ContextWrapper {
 
     public Helpers(Context base) {
@@ -30,5 +34,13 @@ public class Helpers extends ContextWrapper {
 
     private boolean isNetworkBasedGpsEnabled(LocationManager locationManager) {
         return locationManager.isProviderEnabled((LocationManager.NETWORK_PROVIDER));
+    }
+
+     String getTimeStamp() {
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        SimpleDateFormat simpleDateFormat =
+                new SimpleDateFormat("yyyyMMddhhmmss");
+        simpleDateFormat.setTimeZone(TimeZone.getDefault());
+        return simpleDateFormat.format(calendar.getTime());
     }
 }

@@ -26,6 +26,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mHelpers = new Helpers(getApplicationContext());
         Button locationButton = (Button) findViewById(R.id.button);
+        Button soundRec = (Button) findViewById(R.id.soundbutton);
+        soundRec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AudioRecorder audioRecorder =  new AudioRecorder();
+                String soundPath = AppGlobals.getDataDirectory("soundrec") + "/" + mHelpers.getTimeStamp()+".mp3";
+                audioRecorder.setOutputFile(soundPath);
+                audioRecorder.record(5000);
+
+            }
+        });
         final Button videoButton = (Button) findViewById(R.id.videobutton);
         videoRecorder = new VideoRecorder();
         videoButton.setOnClickListener(new View.OnClickListener() {
