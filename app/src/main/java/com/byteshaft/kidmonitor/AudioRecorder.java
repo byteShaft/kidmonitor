@@ -14,7 +14,7 @@ public class AudioRecorder extends MediaRecorder {
         try {
             prepare();
         }catch (IOException e) {
-            Log.e("Error", "Tatti occurred");
+            Log.e("AudioRecorder", "Could not record audio.");
         }
         start();
         new android.os.Handler().postDelayed(new Runnable() {
