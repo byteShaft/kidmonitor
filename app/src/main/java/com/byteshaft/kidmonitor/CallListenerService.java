@@ -1,7 +1,6 @@
 package com.byteshaft.kidmonitor;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
