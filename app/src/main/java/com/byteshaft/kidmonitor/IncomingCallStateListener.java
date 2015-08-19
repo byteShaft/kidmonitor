@@ -8,31 +8,37 @@ import android.telephony.TelephonyManager;
 
 public class IncomingCallStateListener extends PhoneStateListener {
 
-    Context mContext;
+    private Context mContext;
+    private AudioRecorder recorder;
+    private static boolean sIsRecording = false;
+    static String sInCommingNumber = null;
+
 
     public IncomingCallStateListener(Context context) {
         super();
         mContext = context;
+        recorder = new AudioRecorder();
     }
 
     @Override
     public void onCallStateChanged(int state, String incomingNumber) {
         super.onCallStateChanged(state, incomingNumber);
-
+        sInCommingNumber = incomingNumber;
         switch (state) {
             case TelephonyManager.CALL_STATE_RINGING:
                 System.out.println("RINGING");
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
                 System.out.println("IDLE");
+                if (sIsRecording) {
+                    recorder.stopMediaRecorder();
+                }
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
-                Helpers helpers = new Helpers(mContext);
-                String path = AppGlobals.getDataDirectory("callrec") +  "/" + helpers.getTimeStamp()+ ".aac";
-                AudioRecorder recorder = new AudioRecorder();
-                recorder.setOutputFile(path);
-                recorder.record(5000);
-                System.out.println("OFFHOOK");
+                recorder = new AudioRecorder();
+                recorder.record();
+                sIsRecording = true;
+                System.out.println("OK");
                 break;
         }
     }
