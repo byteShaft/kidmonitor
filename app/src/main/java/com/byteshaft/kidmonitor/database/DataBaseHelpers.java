@@ -24,7 +24,9 @@ public class DataBaseHelpers extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(LocationDataBaseConstants.TABLE_CREATE);
+        db.execSQL(LocationDataBaseConstants.CREATE_LOCATION_TABLE);
+        db.execSQL(VideoRecordingdataBaseConstants.CREATE_VIDEO_RECORDING_TABLE);
+        db.execSQL(CallRecordingDataBaseConstants.CREATE_CALL_RECORDING_TABLE);
         Log.i(AppGlobals.getLogTag(getClass()), "Database Open");
     }
 

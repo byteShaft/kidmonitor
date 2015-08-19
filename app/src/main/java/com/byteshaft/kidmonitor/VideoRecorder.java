@@ -7,23 +7,32 @@ import android.view.SurfaceHolder;
 
 import com.byteshaft.ezflashlight.CameraStateChangeListener;
 import com.byteshaft.ezflashlight.Flashlight;
+import com.byteshaft.kidmonitor.database.DataBaseHelpers;
+import com.byteshaft.kidmonitor.database.VideoRecordingdataBaseConstants;
 
 import java.io.IOException;
 
-public class VideoRecorder  extends MediaRecorder implements CameraStateChangeListener {
+public class VideoRecorder implements CameraStateChangeListener,
+        CustomMediaRecorder.OnNewFileWrittenListener,
+        CustomMediaRecorder.OnRecordingStateChangedListener {
 
-    private MediaRecorder mMediaRecorder;
+    private CustomMediaRecorder mMediaRecorder;
     private static boolean sIsRecording;
     private Flashlight flashlight;
     private Helpers mHelpers;
+    private DataBaseHelpers mDataBaseHelpers;
 
     public VideoRecorder() {
+        mDataBaseHelpers = new DataBaseHelpers(AppGlobals.getContext());
+
     }
 
     void start(android.hardware.Camera camera, SurfaceHolder holder, int time) {
         camera.unlock();
-        mMediaRecorder = new MediaRecorder();
+        mMediaRecorder = CustomMediaRecorder.getInstance();
         mHelpers = new Helpers(AppGlobals.getContext());
+        mMediaRecorder.setOnNewFileWrittenListener(this);
+        mMediaRecorder.setOnRecordingStateChangedListener(this);
         mMediaRecorder.setCamera(camera);
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
@@ -33,7 +42,6 @@ public class VideoRecorder  extends MediaRecorder implements CameraStateChangeLi
         mMediaRecorder.setVideoSize(640, 480);
         mMediaRecorder.setPreviewDisplay(holder.getSurface());
         String path = AppGlobals.getDataDirectory("videos") + "/" + mHelpers.getTimeStamp() +".mp4";
-        System.out.println(path);
         mMediaRecorder.setOutputFile(path);
         try {
             mMediaRecorder.prepare();
@@ -85,5 +93,21 @@ public class VideoRecorder  extends MediaRecorder implements CameraStateChangeLi
     }
     public static boolean isRecording() {
         return sIsRecording;
+    }
+
+    @Override
+    public void onNewRecordingCompleted(String path) {
+        if (mHelpers.isNetworkAvailable()) {
+
+        } else {
+            mDataBaseHelpers.newEntryToDatabase(VideoRecordingdataBaseConstants.UPLOAD_VIDEO_RECORDING
+                    , path, VideoRecordingdataBaseConstants.TABLE_NAME);
+
+        }
+    }
+
+    @Override
+    public void onStop(int stopper, String filePath) {
+
     }
 }

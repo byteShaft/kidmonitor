@@ -13,7 +13,7 @@ public class LocationDataBaseConstants {
     private static final String OPENING_BRACE = "(";
     private static final String CLOSING_BRACE = ")";
 
-    public static final String TABLE_CREATE = "CREATE TABLE "
+    public static final String CREATE_LOCATION_TABLE = "CREATE TABLE "
             + TABLE_NAME
             + OPENING_BRACE
             + ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT,"

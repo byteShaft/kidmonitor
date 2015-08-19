@@ -3,8 +3,13 @@ package com.byteshaft.kidmonitor;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,5 +53,25 @@ public class Helpers extends ContextWrapper {
     public String getCurrentDateandTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyy h:mm a zz");
         return sdf.format(new Date());
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+    public boolean isInternetWorking() {
+        boolean success = false;
+        try {
+            URL url = new URL("http://google.com");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(10000);
+            connection.connect();
+            success = connection.getResponseCode() == 200;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return success;
     }
 }

@@ -25,11 +25,13 @@ public class LocationService extends ContextWrapper implements LocationListener,
     public Location mLocation;
     private CountDownTimer mTimer;
     private DataBaseHelpers dataBaseHelpers;
+    private Helpers mHelpers;
 
 
     public LocationService(Context context) {
         super(context);
         dataBaseHelpers = new DataBaseHelpers(context);
+        mHelpers = new Helpers(context);
     }
 
     public void connectingGoogleApiClient() {
@@ -83,9 +85,12 @@ public class LocationService extends ContextWrapper implements LocationListener,
             String lon = String.valueOf(mLocation.getLongitude());
             String googleMapsLink = "https://maps.google.com/maps?q=" + lat + "," + lon;
             // save to database if Internet Not available
-            dataBaseHelpers.newEntryToDatabase(LocationDataBaseConstants.UPLOAD_LOCATION_COLUMN,
-                    googleMapsLink,LocationDataBaseConstants.TABLE_NAME);
-            dataBaseHelpers.setOnDatabaseChangedListener(this);
+            if (mHelpers.isNetworkAvailable()) {
+
+            } else {
+                dataBaseHelpers.newEntryToDatabase(LocationDataBaseConstants.UPLOAD_LOCATION_COLUMN,
+                        googleMapsLink, LocationDataBaseConstants.TABLE_NAME);
+            }
             Log.i("Location", lat + ", " + lon);
                     /* TODO: Implement Location Response */
             stopLocationService();
