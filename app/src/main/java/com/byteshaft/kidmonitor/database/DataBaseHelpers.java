@@ -8,18 +8,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.byteshaft.kidmonitor.AppGlobals;
-import com.byteshaft.kidmonitor.Helpers;
+import com.byteshaft.kidmonitor.utils.Helpers;
 
 import java.util.ArrayList;
 
 public class DataBaseHelpers extends SQLiteOpenHelper {
 
     private ArrayList<OnDatabaseChangedListener> mListeners = new ArrayList<>();
-    private Helpers mHelpers;
 
     public DataBaseHelpers(Context context) {
         super(context, LocationDataBaseConstants.DATABASE_NAME, null, LocationDataBaseConstants.DATABASE_VERSION);
-        mHelpers = new Helpers(context);
     }
 
     @Override
@@ -41,7 +39,7 @@ public class DataBaseHelpers extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(columnName, value);
-        contentValues.put(GlobalConstants.TIME_STAMP_COLUMN, mHelpers.getCurrentDateandTime());
+        contentValues.put(GlobalConstants.TIME_STAMP_COLUMN, Helpers.getCurrentDateandTime());
         sqLiteDatabase.insert(tableName, null, contentValues);
         dispatchEventOnNewEntryCreated();
         sqLiteDatabase.close();

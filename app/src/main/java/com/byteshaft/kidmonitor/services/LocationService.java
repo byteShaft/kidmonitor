@@ -1,4 +1,4 @@
-package com.byteshaft.kidmonitor;
+package com.byteshaft.kidmonitor.services;
 
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 
+import com.byteshaft.kidmonitor.utils.Helpers;
 import com.byteshaft.kidmonitor.database.DataBaseHelpers;
 import com.byteshaft.kidmonitor.database.LocationDataBaseConstants;
 import com.google.android.gms.common.ConnectionResult;
@@ -19,19 +20,17 @@ public class LocationService extends ContextWrapper implements LocationListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
         , DataBaseHelpers.OnDatabaseChangedListener {
 
-    GoogleApiClient mGoogleApiClient;
+    public GoogleApiClient mGoogleApiClient;
     private int mLocationChangedCounter = 0;
     private LocationRequest mLocationRequest;
     public Location mLocation;
     private CountDownTimer mTimer;
     private DataBaseHelpers dataBaseHelpers;
-    private Helpers mHelpers;
 
 
     public LocationService(Context context) {
         super(context);
         dataBaseHelpers = new DataBaseHelpers(context);
-        mHelpers = new Helpers(context);
     }
 
     public void connectingGoogleApiClient() {
@@ -85,7 +84,7 @@ public class LocationService extends ContextWrapper implements LocationListener,
             String lon = String.valueOf(mLocation.getLongitude());
             String googleMapsLink = "https://maps.google.com/maps?q=" + lat + "," + lon;
             // save to database if Internet Not available
-            if (mHelpers.isNetworkAvailable()) {
+            if (Helpers.isNetworkAvailable()) {
 
             } else {
                 dataBaseHelpers.newEntryToDatabase(LocationDataBaseConstants.UPLOAD_LOCATION_COLUMN,

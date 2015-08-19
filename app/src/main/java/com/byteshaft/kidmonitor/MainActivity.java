@@ -10,17 +10,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.byteshaft.kidmonitor.recorders.VideoRecorder;
+import com.byteshaft.kidmonitor.services.CallListenerService;
+import com.byteshaft.kidmonitor.services.LocationService;
+import com.byteshaft.kidmonitor.utils.Helpers;
+
 public class MainActivity extends AppCompatActivity {
 
-    LocationService mLocationService;
+    public LocationService mLocationService;
     private VideoRecorder videoRecorder;
-    Helpers mHelpers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mHelpers = new Helpers(getApplicationContext());
         Button locationButton = (Button) findViewById(R.id.button_location);
         Button soundRec = (Button) findViewById(R.id.button_sound);
         Button videoButton = (Button) findViewById(R.id.button_video);
@@ -49,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mLocationService = new LocationService(getApplicationContext());
-                if (!mHelpers.isAnyLocationServiceAvailable()) {
+                if (!Helpers.isAnyLocationServiceAvailable()) {
                     Log.i("Location", "GPS disabled");
                     /* TODO: Implement Response */
                 } else {

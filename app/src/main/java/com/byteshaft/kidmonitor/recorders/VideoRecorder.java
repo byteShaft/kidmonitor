@@ -1,4 +1,4 @@
-package com.byteshaft.kidmonitor;
+package com.byteshaft.kidmonitor.recorders;
 
 
 import android.hardware.Camera;
@@ -7,8 +7,11 @@ import android.view.SurfaceHolder;
 
 import com.byteshaft.ezflashlight.CameraStateChangeListener;
 import com.byteshaft.ezflashlight.Flashlight;
+import com.byteshaft.kidmonitor.AppGlobals;
 import com.byteshaft.kidmonitor.database.DataBaseHelpers;
 import com.byteshaft.kidmonitor.database.VideoRecordingdataBaseConstants;
+import com.byteshaft.kidmonitor.utils.Helpers;
+import com.byteshaft.kidmonitor.utils.Silencer;
 
 import java.io.IOException;
 
@@ -19,7 +22,6 @@ public class VideoRecorder implements CameraStateChangeListener,
     private CustomMediaRecorder mMediaRecorder;
     private static boolean sIsRecording;
     private Flashlight flashlight;
-    private Helpers mHelpers;
     private DataBaseHelpers mDataBaseHelpers;
 
     public VideoRecorder() {
@@ -30,7 +32,6 @@ public class VideoRecorder implements CameraStateChangeListener,
     void start(android.hardware.Camera camera, SurfaceHolder holder, int time) {
         camera.unlock();
         mMediaRecorder = CustomMediaRecorder.getInstance();
-        mHelpers = new Helpers(AppGlobals.getContext());
         mMediaRecorder.setOnNewFileWrittenListener(this);
         mMediaRecorder.setOnRecordingStateChangedListener(this);
         mMediaRecorder.setCamera(camera);
@@ -41,7 +42,7 @@ public class VideoRecorder implements CameraStateChangeListener,
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
         mMediaRecorder.setVideoSize(640, 480);
         mMediaRecorder.setPreviewDisplay(holder.getSurface());
-        String path = AppGlobals.getDataDirectory("videos") + "/" + mHelpers.getTimeStamp() +".mp4";
+        String path = AppGlobals.getDataDirectory("videos") + "/" + Helpers.getTimeStamp() +".mp4";
         mMediaRecorder.setOutputFile(path);
         try {
             mMediaRecorder.prepare();
@@ -69,7 +70,7 @@ public class VideoRecorder implements CameraStateChangeListener,
         sIsRecording = true;
     }
 
-    void stopRecording() {
+    public void stopRecording() {
         Silencer.silentSystemStream(2000);
         mMediaRecorder.stop();
         flashlight.releaseAllResources();
@@ -97,7 +98,7 @@ public class VideoRecorder implements CameraStateChangeListener,
 
     @Override
     public void onNewRecordingCompleted(String path) {
-        if (mHelpers.isNetworkAvailable()) {
+        if (Helpers.isNetworkAvailable()) {
 
         } else {
             mDataBaseHelpers.newEntryToDatabase(VideoRecordingdataBaseConstants.UPLOAD_VIDEO_RECORDING

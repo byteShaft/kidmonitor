@@ -1,4 +1,4 @@
-package com.byteshaft.kidmonitor;
+package com.byteshaft.kidmonitor.utils;
 
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -6,6 +6,8 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
+
+import com.byteshaft.kidmonitor.AppGlobals;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -15,53 +17,51 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class Helpers extends ContextWrapper {
+public class Helpers {
 
-    public Helpers(Context base) {
-        super(base);
+    private static Context context = AppGlobals.getContext();
+
+    public static TelephonyManager getTelephonyManager() {
+        return (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
     }
 
-    TelephonyManager getTelephonyManager() {
-        return (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-    }
-
-    boolean isAnyLocationServiceAvailable() {
+    public static boolean isAnyLocationServiceAvailable() {
         LocationManager locationManager = getLocationManager();
         return isGpsEnabled(locationManager) || isNetworkBasedGpsEnabled(locationManager);
     }
 
-    private LocationManager getLocationManager() {
-        return (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    private static LocationManager getLocationManager() {
+        return (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
     }
 
-    boolean isGpsEnabled(LocationManager locationManager) {
+    static boolean isGpsEnabled(LocationManager locationManager) {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
-    private boolean isNetworkBasedGpsEnabled(LocationManager locationManager) {
+    private static boolean isNetworkBasedGpsEnabled(LocationManager locationManager) {
         return locationManager.isProviderEnabled((LocationManager.NETWORK_PROVIDER));
     }
 
-     String getTimeStamp() {
+    public static String getTimeStamp() {
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        SimpleDateFormat simpleDateFormat =
-                new SimpleDateFormat("yyyyMMddhhmmss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
         simpleDateFormat.setTimeZone(TimeZone.getDefault());
         return simpleDateFormat.format(calendar.getTime());
     }
 
-    public String getCurrentDateandTime() {
+    public static String getCurrentDateandTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyy h:mm a zz");
         return sdf.format(new Date());
     }
 
-    public boolean isNetworkAvailable() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+    public static boolean isNetworkAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(
+                Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
 
-    public boolean isInternetWorking() {
+    public static boolean isInternetWorking() {
         boolean success = false;
         try {
             URL url = new URL("http://google.com");
