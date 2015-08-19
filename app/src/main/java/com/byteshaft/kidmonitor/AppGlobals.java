@@ -10,6 +10,9 @@ public class AppGlobals extends Application {
 
     private static Context sContext;
     private static String LOG_TAG = "kid_monitor";
+    static final int STOPPED_AFTER_TIME = 101;
+    static final int STOPPED_WITH_DIRECT_CALL = 102;
+    static final int SERVER_DIED = 100;
 
     @Override
     public void onCreate() {

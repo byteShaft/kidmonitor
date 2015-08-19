@@ -8,38 +8,43 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.byteshaft.kidmonitor.AppGlobals;
+import com.byteshaft.kidmonitor.Helpers;
 
 import java.util.ArrayList;
 
-public class DataBase extends SQLiteOpenHelper {
+public class DataBaseHelpers extends SQLiteOpenHelper {
 
     private ArrayList<OnDatabaseChangedListener> mListeners = new ArrayList<>();
+    private Helpers mHelpers;
 
-    public DataBase(Context context) {
-        super(context, DataBaseConstants.DATABASE_NAME, null, DataBaseConstants.DATABASE_VERSION);
+    public DataBaseHelpers(Context context) {
+        super(context, LocationDataBaseConstants.DATABASE_NAME, null, LocationDataBaseConstants.DATABASE_VERSION);
+        mHelpers = new Helpers(context);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DataBaseConstants.TABLE_CREATE);
+        db.execSQL(LocationDataBaseConstants.CREATE_LOCATION_TABLE);
+        db.execSQL(VideoRecordingdataBaseConstants.CREATE_VIDEO_RECORDING_TABLE);
+        db.execSQL(CallRecordingDataBaseConstants.CREATE_CALL_RECORDING_TABLE);
         Log.i(AppGlobals.getLogTag(getClass()), "Database Open");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS" + DataBaseConstants.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS" + LocationDataBaseConstants.TABLE_NAME);
         onCreate(db);
         Log.i(AppGlobals.getLogTag(getClass()), "Database Open");
     }
 
-    public void addNewLocation(String columnName, String value) {
+    public void newEntryToDatabase(String columnName, String value, String tableName) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(columnName, value);
-        sqLiteDatabase.insert(DataBaseConstants.TABLE_NAME, null, contentValues);
+        contentValues.put(GlobalConstants.TIME_STAMP_COLUMN, mHelpers.getCurrentDateandTime());
+        sqLiteDatabase.insert(tableName, null, contentValues);
         dispatchEventOnNewEntryCreated();
         sqLiteDatabase.close();
-        System.out.println("DBBDBDBD");
     }
 
     public void setOnDatabaseChangedListener(OnDatabaseChangedListener listener) {
