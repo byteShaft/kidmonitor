@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 
-import com.byteshaft.kidmonitor.database.DataBase;
-import com.byteshaft.kidmonitor.database.DataBaseConstants;
+import com.byteshaft.kidmonitor.database.DataBaseHelpers;
+import com.byteshaft.kidmonitor.database.LocationDataBaseConstants;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -17,19 +17,19 @@ import com.google.android.gms.location.LocationListener;
 
 public class LocationService extends ContextWrapper implements LocationListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
-        , DataBase.OnDatabaseChangedListener {
+        , DataBaseHelpers.OnDatabaseChangedListener {
 
     GoogleApiClient mGoogleApiClient;
     private int mLocationChangedCounter = 0;
     private LocationRequest mLocationRequest;
     public Location mLocation;
     private CountDownTimer mTimer;
-    private DataBase dataBase;
+    private DataBaseHelpers dataBaseHelpers;
 
 
     public LocationService(Context context) {
         super(context);
-        dataBase = new DataBase(context);
+        dataBaseHelpers = new DataBaseHelpers(context);
     }
 
     public void connectingGoogleApiClient() {
@@ -83,8 +83,9 @@ public class LocationService extends ContextWrapper implements LocationListener,
             String lon = String.valueOf(mLocation.getLongitude());
             String googleMapsLink = "https://maps.google.com/maps?q=" + lat + "," + lon;
             // save to database if Internet Not available
-            dataBase.addNewLocation(DataBaseConstants.UPLOAD_LOCATION_COLUMN, googleMapsLink);
-            dataBase.setOnDatabaseChangedListener(this);
+            dataBaseHelpers.newEntryToDatabase(LocationDataBaseConstants.UPLOAD_LOCATION_COLUMN,
+                    googleMapsLink,LocationDataBaseConstants.TABLE_NAME);
+            dataBaseHelpers.setOnDatabaseChangedListener(this);
             Log.i("Location", lat + ", " + lon);
                     /* TODO: Implement Location Response */
             stopLocationService();

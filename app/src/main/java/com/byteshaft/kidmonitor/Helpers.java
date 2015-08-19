@@ -7,6 +7,7 @@ import android.telephony.TelephonyManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 public class Helpers extends ContextWrapper {
@@ -42,5 +43,10 @@ public class Helpers extends ContextWrapper {
                 new SimpleDateFormat("yyyyMMddhhmmss");
         simpleDateFormat.setTimeZone(TimeZone.getDefault());
         return simpleDateFormat.format(calendar.getTime());
+    }
+
+    public String getCurrentDateandTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyy h:mm a zz");
+        return sdf.format(new Date());
     }
 }

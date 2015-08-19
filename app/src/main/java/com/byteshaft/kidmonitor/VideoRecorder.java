@@ -1,7 +1,6 @@
 package com.byteshaft.kidmonitor;
 
 
-import android.content.Context;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.view.SurfaceHolder;
@@ -11,7 +10,7 @@ import com.byteshaft.ezflashlight.Flashlight;
 
 import java.io.IOException;
 
-public class VideoRecorder implements CameraStateChangeListener {
+public class VideoRecorder  extends MediaRecorder implements CameraStateChangeListener {
 
     private MediaRecorder mMediaRecorder;
     private static boolean sIsRecording;
