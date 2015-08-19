@@ -19,7 +19,7 @@ public class LocationService extends ContextWrapper implements LocationListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
         , DataBase.OnDatabaseChangedListener {
 
-    private GoogleApiClient mGoogleApiClient;
+    GoogleApiClient mGoogleApiClient;
     private int mLocationChangedCounter = 0;
     private LocationRequest mLocationRequest;
     public Location mLocation;
