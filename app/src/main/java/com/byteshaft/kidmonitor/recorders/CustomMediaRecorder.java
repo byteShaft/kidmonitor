@@ -1,8 +1,10 @@
-package com.byteshaft.kidmonitor;
+package com.byteshaft.kidmonitor.recorders;
 
 import android.media.MediaRecorder;
 import android.os.Handler;
 import android.util.Log;
+
+import com.byteshaft.kidmonitor.AppGlobals;
 
 import java.util.ArrayList;
 
@@ -19,7 +21,7 @@ public class CustomMediaRecorder extends MediaRecorder implements MediaRecorder.
     private String mFilePath;
     private boolean mWasNormalStop;
 
-    static CustomMediaRecorder getInstance() {
+    public static CustomMediaRecorder getInstance() {
         if (mCustomMediaRecorder == null) {
             mCustomMediaRecorder = new CustomMediaRecorder();
             return mCustomMediaRecorder;
@@ -31,11 +33,11 @@ public class CustomMediaRecorder extends MediaRecorder implements MediaRecorder.
         }
     }
 
-    void setOnNewFileWrittenListener(OnNewFileWrittenListener listener) {
+    public void setOnNewFileWrittenListener(OnNewFileWrittenListener listener) {
         mListeners.add(listener);
     }
 
-    void setOnRecordingStateChangedListener(OnRecordingStateChangedListener listener) {
+    public void setOnRecordingStateChangedListener(OnRecordingStateChangedListener listener) {
         mStateListeners.add(listener);
     }
 

@@ -4,15 +4,18 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
 
+import com.byteshaft.kidmonitor.utils.Helpers;
+
 import java.io.File;
 
 public class AppGlobals extends Application {
 
     private static Context sContext;
     private static String LOG_TAG = "kid_monitor";
-    static final int STOPPED_AFTER_TIME = 101;
-    static final int STOPPED_WITH_DIRECT_CALL = 102;
-    static final int SERVER_DIED = 100;
+    public static final int STOPPED_AFTER_TIME = 101;
+    public static final int STOPPED_WITH_DIRECT_CALL = 102;
+    public static final int SERVER_DIED = 100;
+    private static boolean mIsRecordingCall;
 
     @Override
     public void onCreate() {
@@ -40,7 +43,18 @@ public class AppGlobals extends Application {
         if (!file.exists()) {
             file.mkdirs();
         }
-        System.out.println(file.getAbsolutePath());
         return file.getAbsolutePath();
+    }
+
+    public static String getNewFilePathForType(String type) {
+        return getDataDirectory(type) + File.separator + Helpers.getTimeStamp();
+    }
+
+    public static boolean isRecordingCall() {
+        return mIsRecordingCall;
+    }
+
+    public static void setIsRecordingCall(boolean recordingCall) {
+        mIsRecordingCall = recordingCall;
     }
 }

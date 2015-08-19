@@ -27,8 +27,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".CallListenerService" />
-        <receiver android:name=".BootStateListener">
+        <service android:name=".services.CallListenerService" />
+        <receiver android:name=".receivers.BootStateListener">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>

@@ -1,8 +1,10 @@
-package com.byteshaft.kidmonitor;
+package com.byteshaft.kidmonitor.utils;
 
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Handler;
+
+import com.byteshaft.kidmonitor.AppGlobals;
 
 public class Silencer {
 

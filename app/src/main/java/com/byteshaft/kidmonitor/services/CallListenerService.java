@@ -1,26 +1,24 @@
-package com.byteshaft.kidmonitor;
+package com.byteshaft.kidmonitor.services;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+
+import com.byteshaft.kidmonitor.receivers.IncomingCallStateListener;
+import com.byteshaft.kidmonitor.utils.Helpers;
 
 public class CallListenerService extends Service {
 
     private IncomingCallStateListener mIncomingCallStateListener;
     private TelephonyManager mTelephonyManager;
 
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Helpers helpers = new Helpers(getApplicationContext());
-        mIncomingCallStateListener = new IncomingCallStateListener(getApplicationContext());
-        mTelephonyManager = helpers.getTelephonyManager();
+        mIncomingCallStateListener = new IncomingCallStateListener();
+        mTelephonyManager = Helpers.getTelephonyManager();
         mTelephonyManager.listen(mIncomingCallStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_NEW_OUTGOING_CALL);
-        registerReceiver(mIncomingCallStateListener.mOutgoingCallListener, intentFilter);
         return START_STICKY;
     }
 
@@ -33,6 +31,5 @@ public class CallListenerService extends Service {
     public void onDestroy() {
         super.onDestroy();
         mTelephonyManager.listen(mIncomingCallStateListener, PhoneStateListener.LISTEN_NONE);
-        unregisterReceiver(mIncomingCallStateListener.mOutgoingCallListener);
     }
 }
