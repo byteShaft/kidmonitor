@@ -9,11 +9,16 @@ import java.io.File;
 public class AppGlobals extends Application {
 
     private static Context sContext;
+    private static String LOG_TAG = "kid_monitor";
 
     @Override
     public void onCreate() {
         super.onCreate();
         sContext = getApplicationContext();
+    }
+
+    public static String getLogTag(Class aClass) {
+        return LOG_TAG + aClass.getName();
     }
 
     public static Context getContext() {
