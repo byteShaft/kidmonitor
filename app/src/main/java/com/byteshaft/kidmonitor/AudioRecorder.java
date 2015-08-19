@@ -4,32 +4,48 @@ import android.media.MediaRecorder;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-public class AudioRecorder extends MediaRecorder {
+public class AudioRecorder implements AudioCustomMediaRecorder.PlaybackStateChangedListener {
 
-    public void record(int time) {
-        setAudioSource(MediaRecorder.AudioSource.MIC);
-        setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-        setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+    AudioCustomMediaRecorder audioCustomMediaRecorder;
+
+    public void record() {
+        Helpers helpers = new Helpers(AppGlobals.getContext());
+        audioCustomMediaRecorder = new AudioCustomMediaRecorder();
+        String path = AppGlobals.getDataDirectory("callrec") +  "/" + helpers.getTimeStamp()+
+                "_"+IncomingCallStateListener.sInCommingNumber + ".aac";
+        audioCustomMediaRecorder.reset();
+        audioCustomMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        audioCustomMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+        audioCustomMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        audioCustomMediaRecorder.setOutputFile(path);
+        audioCustomMediaRecorder.setOnPlaybackStateChangedListener(this);
+        // STREAM TO PHP? //Alert
         try {
-            prepare();
-        }catch (IOException e) {
-            Log.e("AudioRecorder", "Could not record audio.");
+            audioCustomMediaRecorder.prepare();
+        } catch (java.io.IOException e) {
+            return;
         }
-        start();
-        new android.os.Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                stop();
-            }
-        }, time);
+        audioCustomMediaRecorder.start();
+    }
 
+    void stopMediaRecorder() {
+        audioCustomMediaRecorder.stop();
+        audioCustomMediaRecorder.reset();
+        audioCustomMediaRecorder.release();
     }
 
     @Override
-    public void stop() throws IllegalStateException {
-        super.stop();
-        reset();
-        release();
+    public void onStop(String outputFilePath) {
+        System.out.println("OUTPUT"+outputFilePath);
+        if (IncomingCallStateListener.sInCommingNumber != null) {
+            IncomingCallStateListener.sInCommingNumber = null;
+        }
+    }
+
+    @Override
+    public void onStart() {
+
     }
 }

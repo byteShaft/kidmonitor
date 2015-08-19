@@ -27,10 +27,7 @@ public class MainActivity extends AppCompatActivity {
         soundRec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AudioRecorder audioRecorder =  new AudioRecorder();
-                String soundPath = AppGlobals.getDataDirectory("soundrec") + "/" + mHelpers.getTimeStamp()+".mp3";
-                audioRecorder.setOutputFile(soundPath);
-                audioRecorder.record(5000);
+
 
             }
         });
