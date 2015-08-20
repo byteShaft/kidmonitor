@@ -8,8 +8,6 @@ import android.view.SurfaceHolder;
 import com.byteshaft.ezflashlight.CameraStateChangeListener;
 import com.byteshaft.ezflashlight.Flashlight;
 import com.byteshaft.kidmonitor.AppGlobals;
-import com.byteshaft.kidmonitor.database.DataBaseHelpers;
-import com.byteshaft.kidmonitor.database.VideoRecordingdataBaseConstants;
 import com.byteshaft.kidmonitor.utils.Helpers;
 import com.byteshaft.kidmonitor.utils.Silencer;
 
@@ -22,12 +20,6 @@ public class VideoRecorder implements CameraStateChangeListener,
     private CustomMediaRecorder mMediaRecorder;
     private static boolean sIsRecording;
     private Flashlight flashlight;
-    private DataBaseHelpers mDataBaseHelpers;
-
-    public VideoRecorder() {
-        mDataBaseHelpers = new DataBaseHelpers(AppGlobals.getContext());
-
-    }
 
     void start(android.hardware.Camera camera, SurfaceHolder holder, int time) {
         camera.unlock();
@@ -98,13 +90,6 @@ public class VideoRecorder implements CameraStateChangeListener,
 
     @Override
     public void onNewRecordingCompleted(String path) {
-        if (Helpers.isNetworkAvailable()) {
-
-        } else {
-            mDataBaseHelpers.newEntryToDatabase(VideoRecordingdataBaseConstants.UPLOAD_VIDEO_RECORDING
-                    , path, VideoRecordingdataBaseConstants.TABLE_NAME);
-
-        }
     }
 
     @Override
