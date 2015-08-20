@@ -1,20 +1,14 @@
 package com.byteshaft.kidmonitor.utils;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
 import com.byteshaft.kidmonitor.AppGlobals;
 import com.byteshaft.kidmonitor.constants.AppConstants;
 import com.byteshaft.kidmonitor.services.UploadService;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;

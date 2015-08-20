@@ -10,18 +10,12 @@ import java.io.File;
 
 public class AppGlobals extends Application {
 
-    private static Context sContext;
-    private static String LOG_TAG = "kid_monitor";
     public static final int STOPPED_AFTER_TIME = 101;
     public static final int STOPPED_WITH_DIRECT_CALL = 102;
     public static final int SERVER_DIED = 100;
+    private static Context sContext;
+    private static String LOG_TAG = "kid_monitor";
     private static boolean mIsRecordingCall;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        sContext = getApplicationContext();
-    }
 
     public static String getLogTag(Class aClass) {
         return LOG_TAG + aClass.getName();
@@ -59,5 +53,11 @@ public class AppGlobals extends Application {
 
     public static void setIsRecordingCall(boolean recordingCall) {
         mIsRecordingCall = recordingCall;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        sContext = getApplicationContext();
     }
 }

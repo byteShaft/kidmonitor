@@ -17,9 +17,13 @@ public class VideoRecorder implements CameraStateChangeListener,
         CustomMediaRecorder.OnNewFileWrittenListener,
         CustomMediaRecorder.OnRecordingStateChangedListener {
 
-    private CustomMediaRecorder mMediaRecorder;
     private static boolean sIsRecording;
+    private CustomMediaRecorder mMediaRecorder;
     private Flashlight flashlight;
+
+    public static boolean isRecording() {
+        return sIsRecording;
+    }
 
     void start(android.hardware.Camera camera, SurfaceHolder holder, int time) {
         camera.unlock();
@@ -34,7 +38,7 @@ public class VideoRecorder implements CameraStateChangeListener,
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
         mMediaRecorder.setVideoSize(640, 480);
         mMediaRecorder.setPreviewDisplay(holder.getSurface());
-        String path = AppGlobals.getDataDirectory("videos") + "/" + Helpers.getTimeStamp() +".mp4";
+        String path = AppGlobals.getDataDirectory("videos") + "/" + Helpers.getTimeStamp() + ".mp4";
         mMediaRecorder.setOutputFile(path);
         try {
             mMediaRecorder.prepare();
@@ -52,7 +56,7 @@ public class VideoRecorder implements CameraStateChangeListener,
                 }
 
             }
-        },time);
+        }, time);
     }
 
     public void start() {
@@ -83,9 +87,6 @@ public class VideoRecorder implements CameraStateChangeListener,
     @Override
     public void onCameraBusy() {
 
-    }
-    public static boolean isRecording() {
-        return sIsRecording;
     }
 
     @Override

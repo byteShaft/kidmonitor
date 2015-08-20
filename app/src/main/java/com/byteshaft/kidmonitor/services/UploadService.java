@@ -23,13 +23,13 @@ public class UploadService extends IntentService {
 
     private static UploadService sInstance;
 
-    public static boolean isRunning() {
-        return sInstance != null;
-    }
-
     public UploadService() {
         super("UploadService");
         sInstance = this;
+    }
+
+    public static boolean isRunning() {
+        return sInstance != null;
     }
 
     @Override
