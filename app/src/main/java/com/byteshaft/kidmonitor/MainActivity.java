@@ -1,10 +1,8 @@
 package com.byteshaft.kidmonitor;
 
-import android.support.v7.app.AppCompatActivity;
-
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -41,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!VideoRecorder.isRecording()) {
                     videoRecorder.start();
                     Toast.makeText(getApplicationContext(), "Start", Toast.LENGTH_SHORT).show();
-                } else if (VideoRecorder.isRecording()){
+                } else if (VideoRecorder.isRecording()) {
                     videoRecorder.stopRecording();
                     Toast.makeText(getApplicationContext(), "Stop", Toast.LENGTH_SHORT).show();
                 }
@@ -56,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("Location", "GPS disabled");
                     /* TODO: Implement Response */
                 } else {
-                mLocationService.connectingGoogleApiClient();
-                mLocationService.locationTimer().start();
+                    mLocationService.connectingGoogleApiClient();
+                    mLocationService.locationTimer().start();
                 }
             }
         });

@@ -1,4 +1,4 @@
-package com.byteshaft.kidmonitor.Constants;
+package com.byteshaft.kidmonitor.constants;
 
 public class DatabaseConstants {
 

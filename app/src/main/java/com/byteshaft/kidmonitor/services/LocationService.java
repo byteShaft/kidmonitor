@@ -7,22 +7,21 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 
-import com.byteshaft.kidmonitor.AppGlobals;
 import com.byteshaft.kidmonitor.database.MonitorDatabase;
 import com.byteshaft.kidmonitor.utils.Helpers;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationListener;
 
 public class LocationService extends ContextWrapper implements LocationListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     public GoogleApiClient mGoogleApiClient;
+    public Location mLocation;
     private int mLocationChangedCounter = 0;
     private LocationRequest mLocationRequest;
-    public Location mLocation;
     private CountDownTimer mTimer;
 
 

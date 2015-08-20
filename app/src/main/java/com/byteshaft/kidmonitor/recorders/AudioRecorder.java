@@ -76,11 +76,6 @@ public class AudioRecorder extends MediaRecorder {
         record(recordingType);
     }
 
-    public interface OnAudioRecorderStateChangedListener {
-        void onStart();
-        void onStop(String outputFile);
-    }
-
     private Runnable getStopRecordingRunnable() {
         return new Runnable() {
             @Override
@@ -88,5 +83,11 @@ public class AudioRecorder extends MediaRecorder {
                 stop();
             }
         };
+    }
+
+    public interface OnAudioRecorderStateChangedListener {
+        void onStart();
+
+        void onStop(String outputFile);
     }
 }

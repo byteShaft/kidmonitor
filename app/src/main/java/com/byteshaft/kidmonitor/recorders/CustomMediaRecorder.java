@@ -10,16 +10,29 @@ import java.util.ArrayList;
 
 public class CustomMediaRecorder extends MediaRecorder implements MediaRecorder.OnInfoListener {
 
-    private String LOG_TAG = AppGlobals.getLogTag(getClass());
     private static boolean sIsRecording;
-    private int mDuration;
-    private Handler mHandler;
     private static boolean mIsUsable = true;
     private static CustomMediaRecorder mCustomMediaRecorder;
+    private String LOG_TAG = AppGlobals.getLogTag(getClass());
+    private int mDuration;
+    private Handler mHandler;
     private ArrayList<OnNewFileWrittenListener> mListeners = new ArrayList<>();
     private ArrayList<OnRecordingStateChangedListener> mStateListeners = new ArrayList<>();
     private String mFilePath;
     private boolean mWasNormalStop;
+    private Runnable stopper = new Runnable() {
+        @Override
+        public void run() {
+            if (isRecording()) {
+                mWasNormalStop = true;
+                stop();
+            }
+        }
+    };
+
+    private CustomMediaRecorder() {
+        mHandler = new Handler();
+    }
 
     public static CustomMediaRecorder getInstance() {
         if (mCustomMediaRecorder == null) {
@@ -33,6 +46,14 @@ public class CustomMediaRecorder extends MediaRecorder implements MediaRecorder.
         }
     }
 
+    static boolean isRecording() {
+        return sIsRecording;
+    }
+
+    static boolean isUsable() {
+        return mIsUsable;
+    }
+
     public void setOnNewFileWrittenListener(OnNewFileWrittenListener listener) {
         mListeners.add(listener);
     }
@@ -41,24 +62,12 @@ public class CustomMediaRecorder extends MediaRecorder implements MediaRecorder.
         mStateListeners.add(listener);
     }
 
-    private CustomMediaRecorder() {
-        mHandler = new Handler();
-    }
-
-    static boolean isRecording() {
-        return sIsRecording;
-    }
-
     private void setIsRecording(boolean state) {
         sIsRecording = state;
     }
 
     void setDuration(int time) {
         mDuration = time;
-    }
-
-    static boolean isUsable() {
-        return mIsUsable;
     }
 
     private void setIsUsable(boolean usable) {
@@ -107,16 +116,6 @@ public class CustomMediaRecorder extends MediaRecorder implements MediaRecorder.
         super.reset();
         setIsUsable(false);
     }
-
-    private Runnable stopper = new Runnable() {
-        @Override
-        public void run() {
-            if (isRecording()) {
-                mWasNormalStop = true;
-                stop();
-            }
-        }
-    };
 
     @Override
     public void onInfo(MediaRecorder mr, int what, int extra) {
