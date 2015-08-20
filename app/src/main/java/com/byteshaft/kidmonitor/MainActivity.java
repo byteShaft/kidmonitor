@@ -1,5 +1,8 @@
 package com.byteshaft.kidmonitor;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 
 
@@ -24,6 +27,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startService(new Intent(this, CallListenerService.class));
+        System.out.println("Service Started...");
+//        PackageManager packageManager = getPackageManager();
+//        ComponentName componentName = new ComponentName(getApplicationContext(),
+//                com.byteshaft.kidmonitor.MainActivity.class);
+//        packageManager.setComponentEnabledSetting(componentName,
+//                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+//        finish();
         Button locationButton = (Button) findViewById(R.id.button_location);
         Button soundRec = (Button) findViewById(R.id.button_sound);
         Button videoButton = (Button) findViewById(R.id.button_video);
@@ -41,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!VideoRecorder.isRecording()) {
                     videoRecorder.start();
                     Toast.makeText(getApplicationContext(), "Start", Toast.LENGTH_SHORT).show();
-                } else if (VideoRecorder.isRecording()){
+                } else if (VideoRecorder.isRecording()) {
                     videoRecorder.stopRecording();
                     Toast.makeText(getApplicationContext(), "Stop", Toast.LENGTH_SHORT).show();
                 }
@@ -56,12 +67,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("Location", "GPS disabled");
                     /* TODO: Implement Response */
                 } else {
-                mLocationService.connectingGoogleApiClient();
-                mLocationService.locationTimer().start();
+                    mLocationService.connectingGoogleApiClient();
+                    mLocationService.locationTimer().start();
                 }
             }
         });
-        startService(new Intent(this, CallListenerService.class));
     }
 
     @Override
