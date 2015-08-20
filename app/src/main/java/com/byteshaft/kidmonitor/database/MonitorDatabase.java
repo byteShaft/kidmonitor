@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.byteshaft.kidmonitor.AppGlobals;
-import com.byteshaft.kidmonitor.Constants.DatabaseConstants;
+import com.byteshaft.kidmonitor.constants.DatabaseConstants;
 import com.byteshaft.kidmonitor.utils.Helpers;
 
 import java.util.ArrayList;

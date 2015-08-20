@@ -47,7 +47,10 @@ public class AppGlobals extends Application {
     }
 
     public static String getNewFilePathForType(String type) {
-        return getDataDirectory(type) + File.separator + Helpers.getTimeStamp();
+        return getDataDirectory(type)
+                + File.separator
+                + Helpers.getTimeStamp()
+                + Helpers.getFileExtensionForType(type);
     }
 
     public static boolean isRecordingCall() {

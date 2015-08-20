@@ -6,7 +6,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.byteshaft.kidmonitor.database.MonitorDatabase;
+import com.byteshaft.kidmonitor.utils.SftpHelpers;
 import com.byteshaft.kidmonitor.utils.WebServiceHelpers;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 
 import org.json.JSONException;
 
@@ -52,7 +55,12 @@ public class UploadService extends IntentService {
                         e.printStackTrace();
                     }
                 } else {
-                    // Implement SFTP upload magic here.
+                    try {
+                        SftpHelpers.upload(type, (String) map.get("uri"));
+                        database.deleteEntry(Integer.valueOf(map.get("unique_id").toString()));
+                    } catch (JSchException | SftpException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
