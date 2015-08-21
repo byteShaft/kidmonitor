@@ -4,7 +4,9 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 import com.byteshaft.kidmonitor.AppGlobals;
+import com.byteshaft.kidmonitor.constants.AppConstants;
 import com.byteshaft.kidmonitor.recorders.AudioRecorder;
+import com.byteshaft.kidmonitor.utils.RemoteCallsHelpers;
 
 public class IncomingCallStateListener extends PhoneStateListener {
 
@@ -21,9 +23,9 @@ public class IncomingCallStateListener extends PhoneStateListener {
                 }
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
-                if (!AppGlobals.isRecordingCall()) {
+                if (RemoteCallsHelpers.isCallRecordingEnabled() && !AppGlobals.isRecordingCall()) {
                     recorder = AudioRecorder.getInstance();
-                    recorder.record("callrec");
+                    recorder.record(AppConstants.TYPE_CALL_RECORDINGS);
                     AppGlobals.setIsRecordingCall(true);
                 }
                 break;

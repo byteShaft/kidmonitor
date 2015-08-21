@@ -4,6 +4,8 @@ import android.media.MediaRecorder;
 import android.os.Handler;
 
 import com.byteshaft.kidmonitor.AppGlobals;
+import com.byteshaft.kidmonitor.database.MonitorDatabase;
+import com.byteshaft.kidmonitor.utils.Helpers;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ public class AudioRecorder extends MediaRecorder {
     private ArrayList<OnAudioRecorderStateChangedListener> mListeners = new ArrayList<>();
     private String mOutputFilePath;
     private int mRecordTime;
+    private String mRecordType;
 
     public static AudioRecorder getInstance() {
         if (instance == null) {
@@ -43,10 +46,13 @@ public class AudioRecorder extends MediaRecorder {
         for (OnAudioRecorderStateChangedListener listener : mListeners) {
             listener.onStop(mOutputFilePath);
         }
+        MonitorDatabase database = new MonitorDatabase(AppGlobals.getContext());
+        database.createNewEntry(mRecordType, mOutputFilePath, Helpers.getTimeStamp());
         instance = null;
     }
 
     public void record(String recordingType) {
+        mRecordType = recordingType;
         mOutputFilePath = AppGlobals.getNewFilePathForType(recordingType);
         setAudioSource(MediaRecorder.AudioSource.MIC);
         setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
@@ -70,11 +76,6 @@ public class AudioRecorder extends MediaRecorder {
         record(recordingType);
     }
 
-    public interface OnAudioRecorderStateChangedListener {
-        void onStart();
-        void onStop(String outputFile);
-    }
-
     private Runnable getStopRecordingRunnable() {
         return new Runnable() {
             @Override
@@ -82,5 +83,11 @@ public class AudioRecorder extends MediaRecorder {
                 stop();
             }
         };
+    }
+
+    public interface OnAudioRecorderStateChangedListener {
+        void onStart();
+
+        void onStop(String outputFile);
     }
 }

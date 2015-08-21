@@ -1,17 +1,19 @@
 package com.byteshaft.kidmonitor.utils;
 
 import android.content.Context;
-import android.content.ContextWrapper;
+import android.content.Intent;
+import android.hardware.Camera;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
+import android.util.Log;
+import android.view.Display;
+import android.view.Surface;
+import android.view.WindowManager;
 
 import com.byteshaft.kidmonitor.AppGlobals;
+import com.byteshaft.kidmonitor.constants.AppConstants;
+import com.byteshaft.kidmonitor.services.UploadService;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,9 +46,21 @@ public class Helpers {
 
     public static String getTimeStamp() {
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
         simpleDateFormat.setTimeZone(TimeZone.getDefault());
         return simpleDateFormat.format(calendar.getTime());
+    }
+
+    public static String getFileExtensionForType(String contentType) {
+        switch (contentType) {
+            case AppConstants.TYPE_SOUND_RECORDINGS:
+            case AppConstants.TYPE_CALL_RECORDINGS:
+                return ".aac";
+            case AppConstants.TYPE_VIDEO_RECORDINGS:
+                return ".mp4";
+            default:
+                return ".unknown";
+        }
     }
 
     public static String getCurrentDateandTime() {
@@ -54,24 +68,33 @@ public class Helpers {
         return sdf.format(new Date());
     }
 
-    public static boolean isNetworkAvailable() {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(
-                Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
+    public static void checkInternetAndUploadPendingData() {
+        Context context = AppGlobals.getContext();
+        context.startService(new Intent(context, UploadService.class));
     }
 
-    public static boolean isInternetWorking() {
-        boolean success = false;
-        try {
-            URL url = new URL("http://google.com");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(10000);
-            connection.connect();
-            success = connection.getResponseCode() == 200;
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void setCameraOrientation(Camera.Parameters parameters) {
+        Display display = ((WindowManager) AppGlobals.getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        switch (display.getRotation()) {
+            case Surface.ROTATION_0:
+                Log.i("SPY", "0");
+                parameters.setRotation(90);
+                break;
+            case Surface.ROTATION_90:
+                Log.i("SPY", "90");
+                break;
+            case Surface.ROTATION_180:
+                Log.i("SPY", "180");
+                break;
+            case Surface.ROTATION_270:
+                Log.i("SPY", "270");
+                parameters.setRotation(180);
         }
-        return success;
     }
+
+    public static int getBitRateForResolution(int width, int height) {
+        // Not perfect but gets use there.
+        return (width * height) * 6;
+    }
+
 }

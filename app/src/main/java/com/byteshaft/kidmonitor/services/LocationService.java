@@ -7,30 +7,26 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 
+import com.byteshaft.kidmonitor.database.MonitorDatabase;
 import com.byteshaft.kidmonitor.utils.Helpers;
-import com.byteshaft.kidmonitor.database.DataBaseHelpers;
-import com.byteshaft.kidmonitor.database.LocationDataBaseConstants;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationListener;
 
 public class LocationService extends ContextWrapper implements LocationListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
-        , DataBaseHelpers.OnDatabaseChangedListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     public GoogleApiClient mGoogleApiClient;
+    public Location mLocation;
     private int mLocationChangedCounter = 0;
     private LocationRequest mLocationRequest;
-    public Location mLocation;
     private CountDownTimer mTimer;
-    private DataBaseHelpers dataBaseHelpers;
 
 
     public LocationService(Context context) {
         super(context);
-        dataBaseHelpers = new DataBaseHelpers(context);
     }
 
     public void connectingGoogleApiClient() {
@@ -83,15 +79,9 @@ public class LocationService extends ContextWrapper implements LocationListener,
             String lat = String.valueOf(mLocation.getLatitude());
             String lon = String.valueOf(mLocation.getLongitude());
             String googleMapsLink = "https://maps.google.com/maps?q=" + lat + "," + lon;
-            // save to database if Internet Not available
-            if (Helpers.isNetworkAvailable()) {
-
-            } else {
-                dataBaseHelpers.newEntryToDatabase(LocationDataBaseConstants.UPLOAD_LOCATION_COLUMN,
-                        googleMapsLink, LocationDataBaseConstants.TABLE_NAME);
-            }
+            MonitorDatabase database = new MonitorDatabase(getApplicationContext());
+            database.createNewEntry("location", googleMapsLink, Helpers.getTimeStamp());
             Log.i("Location", lat + ", " + lon);
-                    /* TODO: Implement Location Response */
             stopLocationService();
             mLocationChangedCounter = 0;
         }
@@ -122,10 +112,5 @@ public class LocationService extends ContextWrapper implements LocationListener,
             };
         }
         return mTimer;
-    }
-
-    @Override
-    public void onNewEntryCreated() {
-        System.out.println("OK");
     }
 }
