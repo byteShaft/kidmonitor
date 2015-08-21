@@ -91,4 +91,10 @@ public class Helpers {
                 parameters.setRotation(180);
         }
     }
+
+    public static int getBitRateForResolution(int width, int height) {
+        // Not perfect but gets use there.
+        return (width * height) * 6;
+    }
+
 }
