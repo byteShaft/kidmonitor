@@ -18,7 +18,26 @@ public class AppGlobals extends Application {
     private static Context sContext;
     private static SharedPreferences sPreferences;
     private static String LOG_TAG = "kid_monitor";
-    private static boolean mIsRecordingCall;
+    private static boolean sIsRecordingCall;
+    private static boolean sIsVideoRecording;
+    private static boolean sIsSoundRecording;
+
+    public static boolean isSoundRecording() {
+        return sIsSoundRecording;
+    }
+
+    public static void soundRecordingInProgress(boolean value) {
+        sIsSoundRecording = value;
+    }
+
+    public static boolean isVideoRecording() {
+        return sIsVideoRecording;
+    }
+
+    public static void videoRecordingInProgress(boolean value) {
+        sIsVideoRecording = value;
+    }
+
 
     public static String getLogTag(Class aClass) {
         return LOG_TAG + aClass.getName();
@@ -55,11 +74,11 @@ public class AppGlobals extends Application {
     }
 
     public static boolean isRecordingCall() {
-        return mIsRecordingCall;
+        return sIsRecordingCall;
     }
 
     public static void setIsRecordingCall(boolean recordingCall) {
-        mIsRecordingCall = recordingCall;
+        sIsRecordingCall = recordingCall;
     }
 
     @Override

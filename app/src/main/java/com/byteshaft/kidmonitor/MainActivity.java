@@ -45,14 +45,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AudioRecorder audioRecorder = AudioRecorder.getInstance();
-                audioRecorder.record(AppConstants.TYPE_SOUND_RECORDINGS, 180000);
+                if (!AppGlobals.isSoundRecording()) {
+                    audioRecorder.record(AppConstants.TYPE_SOUND_RECORDINGS, 180000);
+                }
 
             }
         });
         videoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!VideoRecorder.isRecording()) {
+                if (!AppGlobals.isVideoRecording() && !AppGlobals.isSoundRecording()) {
                     videoRecorder = new VideoRecorder();
                     videoRecorder.start(5000);
                     Toast.makeText(getApplicationContext(), "Start", Toast.LENGTH_SHORT).show();

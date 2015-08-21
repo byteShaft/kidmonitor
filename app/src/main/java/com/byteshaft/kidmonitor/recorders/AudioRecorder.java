@@ -50,6 +50,7 @@ public class AudioRecorder extends MediaRecorder {
         MonitorDatabase database = new MonitorDatabase(AppGlobals.getContext());
         database.createNewEntry(mRecordType, mOutputFilePath, Helpers.getTimeStamp());
         instance = null;
+        AppGlobals.soundRecordingInProgress(false);
     }
 
     public void record(String recordingType) {
@@ -74,8 +75,11 @@ public class AudioRecorder extends MediaRecorder {
     }
 
     public void record(String recordingType, int time) {
+        AppGlobals.soundRecordingInProgress(true);
         mRecordTime = time;
-        record(recordingType);
+        if (!AppGlobals.isVideoRecording()) {
+            record(recordingType);
+        }
     }
 
     private Runnable getStopRecordingRunnable() {
