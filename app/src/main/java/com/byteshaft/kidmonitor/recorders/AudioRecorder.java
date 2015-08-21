@@ -2,6 +2,7 @@ package com.byteshaft.kidmonitor.recorders;
 
 import android.media.MediaRecorder;
 import android.os.Handler;
+import android.util.Log;
 
 import com.byteshaft.kidmonitor.AppGlobals;
 import com.byteshaft.kidmonitor.database.MonitorDatabase;
@@ -61,6 +62,7 @@ public class AudioRecorder extends MediaRecorder {
         try {
             prepare();
             start();
+            Log.i(AppGlobals.getLogTag(getClass()), "Recording started !...");
         } catch (IOException e) {
             e.printStackTrace();
         }

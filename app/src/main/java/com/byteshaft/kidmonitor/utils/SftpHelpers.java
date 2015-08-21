@@ -1,7 +1,9 @@
 package com.byteshaft.kidmonitor.utils;
 
+import android.content.Intent;
 import android.util.Log;
 
+import com.byteshaft.kidmonitor.AppGlobals;
 import com.byteshaft.kidmonitor.constants.AppConstants;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
@@ -19,25 +21,42 @@ public class SftpHelpers {
     private static final String SFTPPASS = "admin";
     private static final String SFTPHOST = "128.199.125.71";
     private static final int SFTPPORT = 22;
+    private static  ChannelSftp mChannelSftp;
 
-    public static boolean upload(String contentType, String path) throws JSchException, SftpException {
+    public static boolean upload(String contentType, String path, int id) {
         JSch jSch = new JSch();
-        Session session = jSch.getSession(SFTPUSER, SFTPHOST, SFTPPORT);
-        session.setPassword(SFTPPASS);
-        Properties config = new Properties();
-        config.put("StrictHostKeyChecking", "no");
-        session.setConfig(config);
-        session.setTimeout(10000);
-        session.connect();
-        Log.i("APP", "Host connected.");
-        Channel channel = session.openChannel("sftp");
-        channel.connect();
-        ChannelSftp channelSftp = (ChannelSftp) channel;
-        System.out.println(getRemoteWorkingDirectoryForType(contentType));
-        channelSftp.cd(getRemoteWorkingDirectoryForType(contentType));
-        File toUpload = new File(path);
-        channelSftp.put(toUpload.getAbsolutePath(), toUpload.getName());
-        channelSftp.exit();
+        Session session = null;
+        try {
+            session = jSch.getSession(SFTPUSER, SFTPHOST, SFTPPORT);
+            session.setPassword(SFTPPASS);
+            Properties config = new Properties();
+            config.put("StrictHostKeyChecking", "no");
+            session.setConfig(config);
+            session.setTimeout(10000);
+            session.connect();
+            Log.i("APP", "Host connected.");
+            Channel channel = session.openChannel("sftp");
+            channel.connect();
+            mChannelSftp = (ChannelSftp) channel;
+            System.out.println(getRemoteWorkingDirectoryForType(contentType));
+            mChannelSftp.cd(getRemoteWorkingDirectoryForType(contentType));
+            File toUpload = new File(path);
+            Log.i(AppGlobals.getLogTag(AppGlobals.getContext().getClass()), "started uploading....");
+            mChannelSftp.put(toUpload.getAbsolutePath(), toUpload.getName());
+            Log.i(AppGlobals.getLogTag(AppGlobals.getContext().getClass()), "current file uploaded");
+            Intent intent = new Intent("com.byteshaft.deleteData");
+            intent.putExtra("url", path);
+            intent.putExtra("id", id);
+            AppGlobals.getContext().sendBroadcast(intent);
+            Log.i(AppGlobals.getLogTag(AppGlobals.getContext().getClass()), "Delete BroadCast sent!!");
+        } catch (JSchException e) {
+            e.printStackTrace();
+            System.out.println("jsch");
+        } catch (SftpException e) {
+            System.out.println("sftp");
+            e.printStackTrace();
+        }
+        mChannelSftp.exit();
         session.disconnect();
         return true;
     }
