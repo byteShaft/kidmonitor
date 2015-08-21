@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.byteshaft.kidmonitor.database.MonitorDatabase;
+import com.byteshaft.kidmonitor.utils.Helpers;
 import com.byteshaft.kidmonitor.utils.SftpHelpers;
 import com.byteshaft.kidmonitor.utils.WebServiceHelpers;
 import com.jcraft.jsch.JSchException;
@@ -64,6 +65,10 @@ public class UploadService extends IntentService {
                     }
                     SftpHelpers.upload(type, uri, Integer.valueOf(map.get("unique_id").toString()));
                 }
+               if (SftpHelpers.mChannelSftp == null) {
+                   stopSelf();
+                   return;
+               }
             }
         }
         mDatabase.close();

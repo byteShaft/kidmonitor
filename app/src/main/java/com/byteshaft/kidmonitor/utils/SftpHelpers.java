@@ -19,9 +19,9 @@ public class SftpHelpers {
 
     private static final String SFTPUSER = "deploy";
     private static final String SFTPPASS = "admin";
-    private static final String SFTPHOST = "128.199.125.71";
+    private static final String SFTPHOST = "128.199.125.72";
     private static final int SFTPPORT = 22;
-    private static  ChannelSftp mChannelSftp;
+    public static ChannelSftp mChannelSftp;
 
     public static boolean upload(String contentType, String path, int id) {
         JSch jSch = new JSch();
@@ -50,11 +50,12 @@ public class SftpHelpers {
             AppGlobals.getContext().sendBroadcast(intent);
             Log.i(AppGlobals.getLogTag(AppGlobals.getContext().getClass()), "Delete BroadCast sent!!");
         } catch (JSchException e) {
-            e.printStackTrace();
-            System.out.println("jsch");
+            Log.i(AppGlobals.getLogTag(AppGlobals.getContext().getClass()), "file upload failed!!");
         } catch (SftpException e) {
-            System.out.println("sftp");
-            e.printStackTrace();
+            Log.i(AppGlobals.getLogTag(AppGlobals.getContext().getClass()), "Not connected to server!!");
+        }
+        if (mChannelSftp == null) {
+            return false;
         }
         mChannelSftp.exit();
         session.disconnect();
