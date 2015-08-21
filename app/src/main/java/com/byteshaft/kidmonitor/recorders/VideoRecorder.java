@@ -8,6 +8,8 @@ import android.view.SurfaceHolder;
 import com.byteshaft.ezflashlight.CameraStateChangeListener;
 import com.byteshaft.ezflashlight.Flashlight;
 import com.byteshaft.kidmonitor.AppGlobals;
+import com.byteshaft.kidmonitor.constants.AppConstants;
+import com.byteshaft.kidmonitor.database.MonitorDatabase;
 import com.byteshaft.kidmonitor.utils.Helpers;
 import com.byteshaft.kidmonitor.utils.Silencer;
 
@@ -22,7 +24,7 @@ public class VideoRecorder implements CameraStateChangeListener,
     private Flashlight flashlight;
     private Helpers mHelpers;
     private int mRecordTime;
-
+    private String mPath;
     public static boolean isRecording() {
         return sIsRecording;
     }
@@ -47,8 +49,9 @@ public class VideoRecorder implements CameraStateChangeListener,
         mMediaRecorder.setVideoEncodingBitRate(Helpers.getBitRateForResolution(videoWidth, videoHeight));
         mMediaRecorder.setVideoSize(videoWidth, videoHeight);
         mMediaRecorder.setPreviewDisplay(holder.getSurface());
-        String path = AppGlobals.getDataDirectory("videos") + "/" + Helpers.getTimeStamp() + ".mp4";
-        mMediaRecorder.setOutputFile(path);
+        mPath = AppGlobals.getNewFilePathForType(AppConstants.TYPE_VIDEO_RECORDINGS);
+        System.out.println(mPath);
+        mMediaRecorder.setOutputFile(mPath);
         try {
             mMediaRecorder.prepare();
             Silencer.silentSystemStream(2000);
@@ -83,6 +86,11 @@ public class VideoRecorder implements CameraStateChangeListener,
         mMediaRecorder.release();
         flashlight.releaseAllResources();
         sIsRecording = false;
+        if (mPath != null) {
+            MonitorDatabase database = new MonitorDatabase(AppGlobals.getContext());
+            database.createNewEntry(AppConstants.TYPE_VIDEO_RECORDINGS, mPath, Helpers.getTimeStamp());
+            Helpers.checkInternetAndUploadPendingData();
+        }
     }
 
     @Override
@@ -102,6 +110,7 @@ public class VideoRecorder implements CameraStateChangeListener,
 
     @Override
     public void onNewRecordingCompleted(String path) {
+
     }
 
     @Override
