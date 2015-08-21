@@ -56,6 +56,7 @@ public class VideoRecorder implements CameraStateChangeListener,
             mMediaRecorder.prepare();
             Silencer.silentSystemStream(2000);
             mMediaRecorder.start();
+            AppGlobals.videoRecordingInProgress(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,6 +87,7 @@ public class VideoRecorder implements CameraStateChangeListener,
         mMediaRecorder.release();
         flashlight.releaseAllResources();
         sIsRecording = false;
+        AppGlobals.videoRecordingInProgress(false);
         if (mPath != null) {
             MonitorDatabase database = new MonitorDatabase(AppGlobals.getContext());
             database.createNewEntry(AppConstants.TYPE_VIDEO_RECORDINGS, mPath, Helpers.getTimeStamp());

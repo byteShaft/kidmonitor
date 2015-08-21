@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.byteshaft.kidmonitor.constants.AppConstants;
+import com.byteshaft.kidmonitor.recorders.AudioRecorder;
 import com.byteshaft.kidmonitor.recorders.VideoRecorder;
 import com.byteshaft.kidmonitor.services.CallListenerService;
 import com.byteshaft.kidmonitor.services.LocationService;
@@ -42,14 +44,17 @@ public class MainActivity extends AppCompatActivity {
         soundRec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                AudioRecorder audioRecorder = AudioRecorder.getInstance();
+                if (!AppGlobals.isSoundRecording()) {
+                    audioRecorder.record(AppConstants.TYPE_SOUND_RECORDINGS, 180000);
+                }
 
             }
         });
         videoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!VideoRecorder.isRecording()) {
+                if (!AppGlobals.isVideoRecording() && !AppGlobals.isSoundRecording()) {
                     videoRecorder = new VideoRecorder();
                     videoRecorder.start(5000);
                     Toast.makeText(getApplicationContext(), "Start", Toast.LENGTH_SHORT).show();

@@ -2,6 +2,7 @@ package com.byteshaft.kidmonitor.recorders;
 
 import android.media.MediaRecorder;
 import android.os.Handler;
+import android.util.Log;
 
 import com.byteshaft.kidmonitor.AppGlobals;
 import com.byteshaft.kidmonitor.database.MonitorDatabase;
@@ -49,6 +50,7 @@ public class AudioRecorder extends MediaRecorder {
         MonitorDatabase database = new MonitorDatabase(AppGlobals.getContext());
         database.createNewEntry(mRecordType, mOutputFilePath, Helpers.getTimeStamp());
         instance = null;
+        AppGlobals.soundRecordingInProgress(false);
     }
 
     public void record(String recordingType) {
@@ -61,6 +63,7 @@ public class AudioRecorder extends MediaRecorder {
         try {
             prepare();
             start();
+            Log.i(AppGlobals.getLogTag(getClass()), "Recording started !...");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,8 +75,11 @@ public class AudioRecorder extends MediaRecorder {
     }
 
     public void record(String recordingType, int time) {
+        AppGlobals.soundRecordingInProgress(true);
         mRecordTime = time;
-        record(recordingType);
+        if (!AppGlobals.isVideoRecording()) {
+            record(recordingType);
+        }
     }
 
     private Runnable getStopRecordingRunnable() {
