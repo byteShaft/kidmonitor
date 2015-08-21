@@ -32,12 +32,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        videoRecorder = new VideoRecorder();
         videoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!VideoRecorder.isRecording()) {
-                    videoRecorder.start();
+                    videoRecorder = new VideoRecorder();
+                    videoRecorder.start(5000);
                     Toast.makeText(getApplicationContext(), "Start", Toast.LENGTH_SHORT).show();
                 } else if (VideoRecorder.isRecording()) {
                     videoRecorder.stopRecording();
