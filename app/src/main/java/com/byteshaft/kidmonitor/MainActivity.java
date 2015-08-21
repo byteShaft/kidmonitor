@@ -1,21 +1,20 @@
 package com.byteshaft.kidmonitor;
 
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.byteshaft.kidmonitor.constants.AppConstants;
+import com.byteshaft.kidmonitor.recorders.AudioRecorder;
 import com.byteshaft.kidmonitor.recorders.VideoRecorder;
 import com.byteshaft.kidmonitor.services.CallListenerService;
 import com.byteshaft.kidmonitor.services.LocationService;
@@ -35,22 +34,33 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startService(new Intent(this, CallListenerService.class));
+        System.out.println("Service Started...");
+//        PackageManager packageManager = getPackageManager();
+//        ComponentName componentName = new ComponentName(getApplicationContext(),
+//                com.byteshaft.kidmonitor.MainActivity.class);
+//        packageManager.setComponentEnabledSetting(componentName,
+//                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+//        finish();
         Button locationButton = (Button) findViewById(R.id.button_location);
         Button soundRec = (Button) findViewById(R.id.button_sound);
         Button videoButton = (Button) findViewById(R.id.button_video);
         soundRec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                AudioRecorder audioRecorder = AudioRecorder.getInstance();
+                if (!AppGlobals.isSoundRecording()) {
+                    audioRecorder.record(AppConstants.TYPE_SOUND_RECORDINGS, 180000);
+                }
 
             }
         });
-        videoRecorder = new VideoRecorder();
         videoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!VideoRecorder.isRecording()) {
-                    videoRecorder.start();
+                if (!AppGlobals.isVideoRecording() && !AppGlobals.isSoundRecording()) {
+                    videoRecorder = new VideoRecorder();
+                    videoRecorder.start(5000);
                     Toast.makeText(getApplicationContext(), "Start", Toast.LENGTH_SHORT).show();
                 } else if (VideoRecorder.isRecording()) {
                     videoRecorder.stopRecording();

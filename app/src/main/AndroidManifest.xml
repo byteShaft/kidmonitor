@@ -20,7 +20,7 @@
     <application
         android:name=".AppGlobals"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -67,6 +67,16 @@
         <service
             android:name=".services.RegistrationIntentService"
             android:exported="false" />
+        <receiver android:name=".receivers.ConnectionChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receivers.DeleteDataReceiver">
+            <intent-filter>
+                <action android:name="com.byteshaft.deleteData"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
