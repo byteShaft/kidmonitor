@@ -13,6 +13,7 @@ import com.jcraft.jsch.SftpException;
 
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -56,7 +57,12 @@ public class UploadService extends IntentService {
                     }
                 } else {
                     try {
-                        SftpHelpers.upload(type, (String) map.get("uri"));
+                        String uri = map.get("uri").toString();
+                        File file = new File(uri);
+                        if (!file.exists()) {
+                            return;
+                        }
+                        SftpHelpers.upload(type, uri);
                         database.deleteEntry(Integer.valueOf(map.get("unique_id").toString()));
                     } catch (JSchException | SftpException e) {
                         e.printStackTrace();
