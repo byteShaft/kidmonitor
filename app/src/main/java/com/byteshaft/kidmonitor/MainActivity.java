@@ -1,5 +1,11 @@
 package com.byteshaft.kidmonitor;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.support.v7.app.AppCompatActivity;
+
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +30,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startService(new Intent(this, CallListenerService.class));
+        System.out.println("Service Started...");
+//        PackageManager packageManager = getPackageManager();
+//        ComponentName componentName = new ComponentName(getApplicationContext(),
+//                com.byteshaft.kidmonitor.MainActivity.class);
+//        packageManager.setComponentEnabledSetting(componentName,
+//                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+//        finish();
         Button locationButton = (Button) findViewById(R.id.button_location);
         Button soundRec = (Button) findViewById(R.id.button_sound);
         Button videoButton = (Button) findViewById(R.id.button_video);
@@ -35,12 +49,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        videoRecorder = new VideoRecorder();
         videoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!VideoRecorder.isRecording()) {
-                    videoRecorder.start();
+                    videoRecorder = new VideoRecorder();
+                    videoRecorder.start(5000);
                     Toast.makeText(getApplicationContext(), "Start", Toast.LENGTH_SHORT).show();
                 } else if (VideoRecorder.isRecording()) {
                     videoRecorder.stopRecording();
@@ -62,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        startService(new Intent(this, CallListenerService.class));
     }
 
     @Override
