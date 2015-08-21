@@ -22,13 +22,20 @@ public class VideoRecorder implements CameraStateChangeListener,
     private static boolean sIsRecording;
     private CustomMediaRecorder mMediaRecorder;
     private Flashlight flashlight;
+    private Helpers mHelpers;
+    private int mRecordTime;
     private String mPath;
-
     public static boolean isRecording() {
         return sIsRecording;
     }
 
     void start(android.hardware.Camera camera, SurfaceHolder holder, int time) {
+        int videoWidth = 640;
+        int videoHeight = 480;
+        mHelpers = new Helpers();
+        Camera.Parameters parameters = camera.getParameters();
+        mHelpers.setCameraOrientation(parameters);
+        camera.setParameters(parameters);
         camera.unlock();
         mMediaRecorder = CustomMediaRecorder.getInstance();
         mMediaRecorder.setOnNewFileWrittenListener(this);
@@ -39,7 +46,8 @@ public class VideoRecorder implements CameraStateChangeListener,
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
-        mMediaRecorder.setVideoSize(640, 480);
+        mMediaRecorder.setVideoEncodingBitRate(Helpers.getBitRateForResolution(videoWidth, videoHeight));
+        mMediaRecorder.setVideoSize(videoWidth, videoHeight);
         mMediaRecorder.setPreviewDisplay(holder.getSurface());
         mPath = AppGlobals.getNewFilePathForType(AppConstants.TYPE_VIDEO_RECORDINGS);
         System.out.println(mPath);
@@ -63,7 +71,8 @@ public class VideoRecorder implements CameraStateChangeListener,
         }, time);
     }
 
-    public void start() {
+    public void start(int time) {
+        mRecordTime = time;
         flashlight = new Flashlight(AppGlobals.getContext());
         flashlight.setCameraStateChangedListener(this);
         flashlight.setupCameraPreview();
@@ -73,8 +82,9 @@ public class VideoRecorder implements CameraStateChangeListener,
     public void stopRecording() {
         Silencer.silentSystemStream(2000);
         mMediaRecorder.stop();
-        flashlight.releaseAllResources();
+        mMediaRecorder.reset();
         mMediaRecorder.release();
+        flashlight.releaseAllResources();
         sIsRecording = false;
         if (mPath != null) {
             MonitorDatabase database = new MonitorDatabase(AppGlobals.getContext());
@@ -90,7 +100,7 @@ public class VideoRecorder implements CameraStateChangeListener,
 
     @Override
     public void onCameraViewSetup(Camera camera, SurfaceHolder surfaceHolder) {
-        start(camera, surfaceHolder, 5000);
+        start(camera, surfaceHolder, mRecordTime);
     }
 
     @Override
