@@ -13,4 +13,5 @@ public class AppConstants {
 
     public static final int VIDEO_WIDTH = 640;
     public static final int VIDEO_HEIGHT = 480;
+    public static final int MAX_VIDEO_LENGTH = 15;
 }

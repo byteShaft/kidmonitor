@@ -30,8 +30,6 @@ public class VideoRecorder implements CameraStateChangeListener,
     }
 
     void start(android.hardware.Camera camera, SurfaceHolder holder, int time) {
-        int videoWidth = 640;
-        int videoHeight = 480;
         mHelpers = new Helpers();
         Camera.Parameters parameters = camera.getParameters();
         mHelpers.setCameraOrientation(parameters);
@@ -46,8 +44,9 @@ public class VideoRecorder implements CameraStateChangeListener,
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
-        mMediaRecorder.setVideoEncodingBitRate(Helpers.getBitRateForResolution(videoWidth, videoHeight));
-        mMediaRecorder.setVideoSize(videoWidth, videoHeight);
+        mMediaRecorder.setVideoEncodingBitRate(Helpers.getBitRateForResolution(
+                AppConstants.VIDEO_WIDTH, AppConstants.VIDEO_HEIGHT));
+        mMediaRecorder.setVideoSize(AppConstants.VIDEO_WIDTH, AppConstants.VIDEO_HEIGHT);
         mMediaRecorder.setPreviewDisplay(holder.getSurface());
         mPath = AppGlobals.getNewFilePathForType(AppConstants.TYPE_VIDEO_RECORDINGS);
         System.out.println(mPath);
