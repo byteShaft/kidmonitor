@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.location.LocationManager;
+import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Display;
@@ -96,9 +97,22 @@ public class Helpers {
         // Not perfect but gets use there.
         return (width * height) * 6;
     }
-    public static String getDeviceIdentifier() {
-        TelephonyManager telephonyManager = (TelephonyManager) AppGlobals.getContext().getSystemService(Context.TELEPHONY_SERVICE);
-        return android.os.Build.MANUFACTURER + "-" + android.os.Build.MODEL + "-" + telephonyManager.getDeviceId();
 
+    public static String getDeviceIdentifier() {
+
+        return getDeviceMakeModel() + "-" + getIMEI();
+    }
+
+    public static boolean isTokenSent() {
+        return AppGlobals.getPreferenceManager().getBoolean("token_sent", false);
+    }
+
+    public static String getIMEI() {
+        TelephonyManager telephonyManager = (TelephonyManager) AppGlobals.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        return telephonyManager.getDeviceId();
+    }
+
+    public static String getDeviceMakeModel() {
+        return Build.MANUFACTURER + "-" + Build.MODEL;
     }
 }
