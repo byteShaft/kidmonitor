@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class DiskSpaceHelpers {
 
     public static boolean isEnoughSpaceForRecording() {
-        int bitsPerSecond = getBitRateForResolution(AppConstants.VIDEO_WIDTH,
+        int bitsPerSecond = Helpers.getBitRateForResolution(AppConstants.VIDEO_WIDTH,
                 AppConstants.VIDEO_HEIGHT);
         long maxTime = TimeUnit.MINUTES.toSeconds(MaxVideoValue());
         double totalBits = bitsPerSecond * maxTime;
@@ -24,11 +24,6 @@ public class DiskSpaceHelpers {
     private static double getAvailableSpaceInBits() {
         StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
         return stat.getAvailableBlocks() * (double) stat.getBlockSize();
-    }
-
-    public static int getBitRateForResolution(int width, int height) {
-        // Not perfect but gets use there.
-        return (width * height) * 6;
     }
 
     public static int MaxVideoValue() {
