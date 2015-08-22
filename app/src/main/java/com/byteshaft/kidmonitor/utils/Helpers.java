@@ -96,5 +96,9 @@ public class Helpers {
         // Not perfect but gets use there.
         return (width * height) * 6;
     }
+    public static String getDeviceIdentifier() {
+        TelephonyManager telephonyManager = (TelephonyManager) AppGlobals.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        return android.os.Build.MANUFACTURER + "-" + android.os.Build.MODEL + "-" + telephonyManager.getDeviceId();
 
+    }
 }

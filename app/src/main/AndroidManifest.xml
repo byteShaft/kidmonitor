@@ -77,6 +77,17 @@
                 <action android:name="com.byteshaft.deleteData"/>
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name=".receivers.LocationRequester"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.byteshaft.kidmonitor.request_location"/>
+                <action android:name="com.byteshaft.kidmonitor.request_video"/>
+                <action android:name="com.byteshaft.kidmonitor.request_audio"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
