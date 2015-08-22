@@ -50,7 +50,7 @@ public class UploadService extends IntentService {
                 if (type.equals("location")) {
                     try {
                         boolean success = WebServiceHelpers.writeLocationLogs(
-                                "adgadg", (String) map.get("uri"), (String) map.get("time_stamp"));
+                                Helpers.getDeviceIdentifier(), (String) map.get("uri"), (String) map.get("time_stamp"));
                         if (success) {
                             mDatabase.deleteEntry(Integer.valueOf(map.get("unique_id").toString()));
                         }
