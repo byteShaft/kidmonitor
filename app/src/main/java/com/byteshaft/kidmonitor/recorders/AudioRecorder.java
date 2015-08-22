@@ -10,6 +10,7 @@ import com.byteshaft.kidmonitor.utils.Helpers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class AudioRecorder extends MediaRecorder {
 
@@ -76,7 +77,11 @@ public class AudioRecorder extends MediaRecorder {
 
     public void record(String recordingType, int time) {
         AppGlobals.soundRecordingInProgress(true);
-        mRecordTime = time;
+        if (time > TimeUnit.MINUTES.toMillis(15)) {
+            mRecordTime = (int) TimeUnit.MINUTES.toMillis(15);
+        } else {
+            mRecordTime = time;
+        }
         if (!AppGlobals.isVideoRecording()) {
             record(recordingType);
         }
