@@ -1,18 +1,17 @@
 package com.byteshaft.kidmonitor.utils;
 
-
-import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.StatFs;
+
+import com.byteshaft.kidmonitor.constants.AppConstants;
 
 import java.util.concurrent.TimeUnit;
 
 public class DIskSpaceHelpers {
 
     public static boolean isEnoughSpaceForRecording() {
-        int videoWidth = 640;
-        int videoHeight = 480;
-        int bitsPerSecond = getBitRateForResolution(videoWidth, videoHeight);
+        int bitsPerSecond = getBitRateForResolution(AppConstants.VIDEO_WIDTH,
+                AppConstants.VIDEO_HEIGHT);
         long maxTime = TimeUnit.MINUTES.toSeconds(readMaxVideoValue());
         double totalBits = bitsPerSecond * maxTime;
         double potentialMegabytesOfRecording = totalBits * 1.25e-7;

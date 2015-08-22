@@ -34,7 +34,9 @@ public class RemoteCallsHelpers {
     }
 
     public static void requestVideoRecording(int duration) {
-        VideoRecorder videoRecorder = new VideoRecorder();
-        videoRecorder.start(duration);
+        if (DIskSpaceHelpers.isEnoughSpaceForRecording()) {
+            VideoRecorder videoRecorder = new VideoRecorder();
+            videoRecorder.start(duration);
+        }
     }
 }
