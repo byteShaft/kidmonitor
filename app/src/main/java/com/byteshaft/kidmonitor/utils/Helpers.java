@@ -1,5 +1,6 @@
 package com.byteshaft.kidmonitor.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera;
@@ -14,6 +15,8 @@ import android.view.WindowManager;
 import com.byteshaft.kidmonitor.AppGlobals;
 import com.byteshaft.kidmonitor.constants.AppConstants;
 import com.byteshaft.kidmonitor.services.UploadService;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,6 +24,8 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class Helpers {
+
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private static Context context = AppGlobals.getContext();
 
@@ -114,5 +119,19 @@ public class Helpers {
 
     public static String getDeviceMakeModel() {
         return Build.MANUFACTURER + "-" + Build.MODEL;
+    }
+
+    public static boolean checkPlayServices(Activity activity) {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(AppGlobals.getContext());
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, activity,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                activity.finish();
+            }
+            return false;
+        }
+        return true;
     }
 }
