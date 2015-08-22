@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
     public LocationService mLocationService;
     private VideoRecorder videoRecorder;
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     @Override
@@ -94,26 +93,6 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("Registered");
             }
         };
-
-        if (!Helpers.isTokenSent() && checkPlayServices()) {
-            // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
-        }
-    }
-
-    private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else {
-                finish();
-            }
-            return false;
-        }
-        return true;
     }
 
     @Override
