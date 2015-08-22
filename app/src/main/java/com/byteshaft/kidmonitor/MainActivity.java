@@ -91,11 +91,11 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        if (checkPlayServices()) {
-            // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
-        }
+//        if (checkPlayServices()) {
+//            // Start IntentService to register this application with GCM.
+//            Intent intent = new Intent(this, RegistrationIntentService.class);
+//            startService(intent);
+//        }
     }
 
     private boolean checkPlayServices() {

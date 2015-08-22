@@ -25,13 +25,12 @@ public class IncomingCallStateListener extends PhoneStateListener {
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
                 if (RemoteCallsHelpers.isCallRecordingEnabled() && !AppGlobals.isRecordingCall()
-                        && AppGlobals.isSoundRecording() && AppGlobals.isVideoRecording()) {
+                        && !AppGlobals.isSoundRecording() && !AppGlobals.isVideoRecording()) {
                     if (AppGlobals.isVideoRecording()) {
-                        VideoRecorder videoRecorder = new VideoRecorder();
-                        videoRecorder.stopRecording();
+                        return;
                     }
                     if (AppGlobals.isSoundRecording()) {
-                        recorder.stop();
+                        return;
                     }
                     recorder = AudioRecorder.getInstance();
                     recorder.record(AppConstants.TYPE_CALL_RECORDINGS);
