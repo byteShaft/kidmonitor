@@ -18,6 +18,8 @@ import com.byteshaft.kidmonitor.recorders.AudioRecorder;
 import com.byteshaft.kidmonitor.recorders.VideoRecorder;
 import com.byteshaft.kidmonitor.services.CallListenerService;
 import com.byteshaft.kidmonitor.services.LocationService;
+import com.byteshaft.kidmonitor.services.RegistrationIntentService;
+import com.byteshaft.kidmonitor.utils.DiskSpaceHelpers;
 import com.byteshaft.kidmonitor.utils.Helpers;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -41,15 +43,18 @@ public class MainActivity extends AppCompatActivity {
 //        packageManager.setComponentEnabledSetting(componentName,
 //                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
 //        finish();
+        DiskSpaceHelpers.isEnoughSpaceForSoundRecording();
         Button locationButton = (Button) findViewById(R.id.button_location);
         Button soundRec = (Button) findViewById(R.id.button_sound);
         Button videoButton = (Button) findViewById(R.id.button_video);
         soundRec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AudioRecorder audioRecorder = AudioRecorder.getInstance();
-                if (!AppGlobals.isSoundRecording()) {
-                    audioRecorder.record(AppConstants.TYPE_SOUND_RECORDINGS, 180000);
+                if (DiskSpaceHelpers.isEnoughSpaceForSoundRecording()) {
+                    AudioRecorder audioRecorder = AudioRecorder.getInstance();
+                    if (!AppGlobals.isSoundRecording()) {
+                        audioRecorder.record(AppConstants.TYPE_SOUND_RECORDINGS, 180000);
+                    }
                 }
 
             }
