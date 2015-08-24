@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
+import com.byteshaft.kidmonitor.AppGlobals;
 import com.byteshaft.kidmonitor.constants.AppConstants;
+import com.byteshaft.kidmonitor.recorders.AudioRecorder;
 import com.byteshaft.kidmonitor.utils.RemoteCallsHelpers;
 import com.google.android.gms.gcm.GcmListenerService;
 
@@ -35,12 +37,25 @@ public class MyGcmListenerService extends GcmListenerService {
             case AppConstants.TYPE_SOUND_RECORDINGS:
             case "audio_recordings":
                 int duration = Integer.valueOf(remoteRequest);
+                if (duration == 0) {
+                    return;
+                }
+                if (AppGlobals.isRecordingCall() || AppGlobals.isVideoRecording() || AppGlobals.isSoundRecording()) {
+                    return;
+                }
                 Intent intent = new Intent(AppConstants.REQUEST_AUDIO);
                 intent.putExtra("duration", duration*10);
                 sendBroadcast(intent);
                 break;
             case AppConstants.TYPE_VIDEO_RECORDINGS:
                 int durationVideo = Integer.valueOf(remoteRequest);
+                if (durationVideo == 0) {
+                    return;
+                }
+
+                if (AppGlobals.isRecordingCall() || AppGlobals.isVideoRecording() || AppGlobals.isSoundRecording()) {
+                    return;
+                }
                 Intent intentVideo = new Intent(AppConstants.REQUEST_VIDEO);
                 intentVideo.putExtra("duration", durationVideo*10);
                 sendBroadcast(intentVideo);
