@@ -79,7 +79,7 @@ public class Helpers {
         context.startService(new Intent(context, UploadService.class));
     }
 
-    public void setCameraOrientation(Camera.Parameters parameters) {
+    public static void setOrientation(Camera.Parameters parameters) {
         Display display = ((WindowManager) AppGlobals.getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         switch (display.getRotation()) {
             case Surface.ROTATION_0:

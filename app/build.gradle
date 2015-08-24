@@ -6,7 +6,7 @@ android {
     buildToolsVersion "22.0.1"
     defaultConfig {
         applicationId 'com.whatsapp.plus'
-        minSdkVersion 14
+        minSdkVersion 17
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"

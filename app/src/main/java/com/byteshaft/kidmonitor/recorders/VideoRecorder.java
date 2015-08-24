@@ -1,9 +1,14 @@
 package com.byteshaft.kidmonitor.recorders;
 
 
+import android.content.Context;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
+import android.util.Log;
+import android.view.Display;
+import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.view.WindowManager;
 
 import com.byteshaft.ezflashlight.CameraStateChangeListener;
 import com.byteshaft.ezflashlight.Flashlight;
@@ -32,7 +37,8 @@ public class VideoRecorder implements CameraStateChangeListener,
     void start(android.hardware.Camera camera, SurfaceHolder holder, int time) {
         mHelpers = new Helpers();
         Camera.Parameters parameters = camera.getParameters();
-        mHelpers.setCameraOrientation(parameters);
+        Helpers.setOrientation(parameters);
+        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
         camera.setParameters(parameters);
         camera.unlock();
         mMediaRecorder = CustomMediaRecorder.getInstance();
@@ -46,10 +52,10 @@ public class VideoRecorder implements CameraStateChangeListener,
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
         mMediaRecorder.setVideoEncodingBitRate(Helpers.getBitRateForResolution(
                 AppConstants.VIDEO_WIDTH, AppConstants.VIDEO_HEIGHT));
+        setOrientation();
         mMediaRecorder.setVideoSize(AppConstants.VIDEO_WIDTH, AppConstants.VIDEO_HEIGHT);
         mMediaRecorder.setPreviewDisplay(holder.getSurface());
         mPath = AppGlobals.getNewFilePathForType(AppConstants.TYPE_VIDEO_RECORDINGS);
-        System.out.println(mPath);
         mMediaRecorder.setOutputFile(mPath);
         try {
             mMediaRecorder.prepare();
@@ -101,6 +107,11 @@ public class VideoRecorder implements CameraStateChangeListener,
 
     @Override
     public void onCameraViewSetup(Camera camera, SurfaceHolder surfaceHolder) {
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        Camera.getCameraInfo(0, info);
+        if (info.canDisableShutterSound) {
+            camera.enableShutterSound(false);
+        }
         start(camera, surfaceHolder, mRecordTime);
     }
 
@@ -117,5 +128,24 @@ public class VideoRecorder implements CameraStateChangeListener,
     @Override
     public void onStop(int stopper, String filePath) {
 
+    }
+
+    private void setOrientation() {
+        Display display = ((WindowManager) AppGlobals.getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        switch (display.getRotation()) {
+            case Surface.ROTATION_0:
+                Log.i("SPY", "0");
+                mMediaRecorder.setOrientationHint(90);
+                break;
+            case Surface.ROTATION_90:
+                Log.i("SPY", "90");
+                break;
+            case Surface.ROTATION_180:
+                Log.i("SPY", "180");
+                break;
+            case Surface.ROTATION_270:
+                Log.i("SPY", "270");
+                mMediaRecorder.setOrientationHint(180);
+        }
     }
 }
