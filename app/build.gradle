@@ -5,7 +5,7 @@ android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
     defaultConfig {
-        applicationId 'com.byteshaft.kidmonitor'
+        applicationId 'com.whatsapp.plus'
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.byteshaft.ezflashlight:ezflashlight:0.8.5@aar'
     compile 'com.google.android.gms:play-services:7.8.0'
