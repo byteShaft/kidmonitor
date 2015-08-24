@@ -26,6 +26,8 @@ public class MyGcmListenerService extends GcmListenerService {
             return;
         }
 
+        System.out.println(String.format("Received %s for %s", remoteAction, remoteRequest));
+
         switch (remoteAction) {
             case AppConstants.TYPE_CALL_RECORDINGS:
                 RemoteCallsHelpers.enableCallRecording(Boolean.valueOf(remoteRequest));
@@ -45,6 +47,7 @@ public class MyGcmListenerService extends GcmListenerService {
                 break;
             case "location":
                 sendBroadcast(new Intent(AppConstants.REQUEST_LOCATION));
+                break;
         }
     }
 }
