@@ -10,6 +10,12 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="com.byteshaft.kidmonitor.permission.C2D_MESSAGE"/>
+    <permission android:name="com.byteshaft.kidmonitor.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
 
     <application
         android:name=".AppGlobals"
@@ -32,6 +38,43 @@
         <receiver android:name=".receivers.BootStateListener">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="com.byteshaft.kidmonitor.gcm" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name=".services.MyGcmListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.MyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.RegistrationIntentService"
+            android:exported="false" />
+        <receiver android:name=".receivers.ConnectionChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receivers.DeleteDataReceiver">
+            <intent-filter>
+                <action android:name="com.byteshaft.deleteData"/>
             </intent-filter>
         </receiver>
     </application>

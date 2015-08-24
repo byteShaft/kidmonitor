@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.byteshaft.kidmonitor.database.MonitorDatabase;
+import com.byteshaft.kidmonitor.utils.Helpers;
 import com.byteshaft.kidmonitor.utils.SftpHelpers;
 import com.byteshaft.kidmonitor.utils.WebServiceHelpers;
 import com.jcraft.jsch.JSchException;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 public class UploadService extends IntentService {
 
     private static UploadService sInstance;
+    private MonitorDatabase mDatabase;
 
     public UploadService() {
         super("UploadService");
@@ -35,14 +37,14 @@ public class UploadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        MonitorDatabase database = new MonitorDatabase(getApplicationContext());
-        if (database.isEmpty()) {
-            database.close();
+        mDatabase = new MonitorDatabase(getApplicationContext());
+        if (mDatabase.isEmpty()) {
+            mDatabase.close();
             return;
         }
 
         if (isNetworkAvailable() && isInternetWorking()) {
-            ArrayList<HashMap> records = database.getAllRecords();
+            ArrayList<HashMap> records = mDatabase.getAllRecords();
             for (HashMap map : records) {
                 String type = (String) map.get("data_type");
                 if (type.equals("location")) {
@@ -50,27 +52,26 @@ public class UploadService extends IntentService {
                         boolean success = WebServiceHelpers.writeLocationLogs(
                                 "adgadg", (String) map.get("uri"), (String) map.get("time_stamp"));
                         if (success) {
-                            database.deleteEntry(Integer.valueOf(map.get("unique_id").toString()));
+                            mDatabase.deleteEntry(Integer.valueOf(map.get("unique_id").toString()));
                         }
                     } catch (IOException | JSONException e) {
                         e.printStackTrace();
                     }
                 } else {
-                    try {
-                        String uri = map.get("uri").toString();
-                        File file = new File(uri);
-                        if (!file.exists()) {
-                            return;
-                        }
-                        SftpHelpers.upload(type, uri);
-                        database.deleteEntry(Integer.valueOf(map.get("unique_id").toString()));
-                    } catch (JSchException | SftpException e) {
-                        e.printStackTrace();
+                    String uri = map.get("uri").toString();
+                    File file = new File(uri);
+                    if (!file.exists()) {
+                        return;
                     }
+                    SftpHelpers.upload(type, uri, Integer.valueOf(map.get("unique_id").toString()));
                 }
+               if (SftpHelpers.mChannelSftp == null) {
+                   stopSelf();
+                   return;
+               }
             }
         }
-        database.close();
+        mDatabase.close();
     }
 
     @Override
