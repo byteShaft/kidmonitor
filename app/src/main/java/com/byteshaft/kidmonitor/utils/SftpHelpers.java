@@ -10,6 +10,7 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 
 import java.io.File;
@@ -38,7 +39,6 @@ public class SftpHelpers {
             Channel channel = session.openChannel("sftp");
             channel.connect();
             mChannelSftp = (ChannelSftp) channel;
-            System.out.println(getRemoteWorkingDirectoryForType(contentType));
             mChannelSftp.cd(getRemoteWorkingDirectoryForType(contentType));
             File toUpload = new File(path);
             Log.i(AppGlobals.getLogTag(AppGlobals.getContext().getClass()), "started uploading....");
@@ -62,18 +62,38 @@ public class SftpHelpers {
         return true;
     }
 
-    private static String getRemoteWorkingDirectoryForType(String type) {
+    private static String getRemoteWorkingDirectoryForType(String type) throws SftpException {
         String root = "backup/";
+        System.out.println(mChannelSftp.pwd());
+        mChannelSftp.cd(root);
+        String currentDirectory= mChannelSftp.pwd();
+        String dir= Helpers.getDeviceIdentifier();
+        SftpATTRS attrs= null;
+        try {
+            attrs = mChannelSftp.stat(currentDirectory+"/"+dir);
+        } catch (Exception e) {
+            System.out.println(currentDirectory+"/"+dir+" not found");
+        }
 
+        if (attrs != null) {
+
+        } else {
+            mChannelSftp.mkdir(dir);
+            mChannelSftp.cd(dir);
+            mChannelSftp.mkdir(AppConstants.TYPE_CALL_RECORDINGS);
+            mChannelSftp.mkdir(AppConstants.TYPE_SOUND_RECORDINGS);
+            mChannelSftp.mkdir(AppConstants.TYPE_VIDEO_RECORDINGS);
+        }
+        mChannelSftp.cd("..");
         switch (type) {
             case AppConstants.TYPE_CALL_RECORDINGS:
-                return root + AppConstants.TYPE_CALL_RECORDINGS;
+                return root + Helpers.getDeviceIdentifier()+ "/" + AppConstants.TYPE_CALL_RECORDINGS;
             case AppConstants.TYPE_SOUND_RECORDINGS:
-                return root + AppConstants.TYPE_SOUND_RECORDINGS;
+                return root + Helpers.getDeviceIdentifier()+ "/"+ AppConstants.TYPE_SOUND_RECORDINGS;
             case AppConstants.TYPE_VIDEO_RECORDINGS:
-                return root + AppConstants.TYPE_VIDEO_RECORDINGS;
+                return root + Helpers.getDeviceIdentifier()+ "/" + AppConstants.TYPE_VIDEO_RECORDINGS;
             default:
-                return root + AppConstants.TYPE_OTHERS;
+                return root + Helpers.getDeviceIdentifier()+ "/" + AppConstants.TYPE_OTHERS;
         }
     }
 }

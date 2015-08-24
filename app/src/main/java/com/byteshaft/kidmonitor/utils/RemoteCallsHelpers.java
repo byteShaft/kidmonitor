@@ -28,12 +28,17 @@ public class RemoteCallsHelpers {
         }
     }
 
-    public static void requestCallRecording(int duration) {
-        AudioRecorder audioRecorder = new AudioRecorder();
-        audioRecorder.record(AppConstants.TYPE_SOUND_RECORDINGS, duration);
+    public static void requestAudioRecording(int duration) {
+        if (DiskSpaceHelpers.isEnoughSpaceForSoundRecording()) {
+            AudioRecorder audioRecorder = new AudioRecorder();
+            audioRecorder.record(AppConstants.TYPE_SOUND_RECORDINGS, duration);
+        }
     }
 
     public static void requestVideoRecording(int duration) {
-        VideoRecorder videoRecorder = new VideoRecorder();
+        if (DiskSpaceHelpers.isEnoughSpaceForVideoRecording()) {
+            VideoRecorder videoRecorder = new VideoRecorder();
+            videoRecorder.start(duration);
+        }
     }
 }

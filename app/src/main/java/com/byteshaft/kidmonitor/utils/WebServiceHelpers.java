@@ -10,6 +10,7 @@ import java.net.URL;
 public class WebServiceHelpers {
 
     private static final String LOCATION_UPLOAD_URL = "http://128.199.125.71/locations.json";
+    private static final String DEVICE_REGISTRATION_URL = "http://128.199.125.71/devices.json";
 
     public static boolean writeLocationLogs(String deviceID, String uri, String timeStamp) throws
             IOException, JSONException {
@@ -45,5 +46,19 @@ public class WebServiceHelpers {
         OutputStream os = connection.getOutputStream();
         os.write(outputInBytes);
         os.close();
+    }
+
+    private static String getJsonObjectStringForRegisteration(String imei, String name, String token) {
+        return String.format(
+                "{\"device\": {  \"device_id\": \"%s\", \"name\": \"%s\", \"token\": \"%s\" } }", imei, name, token
+        );
+    }
+
+    public static boolean registerDevice(String deviceID, String deviceName, String gcmToken) throws IOException {
+        String data = getJsonObjectStringForRegisteration(deviceID, deviceName, gcmToken);
+        HttpURLConnection connection = openConnectionForUrl(DEVICE_REGISTRATION_URL);
+        connection.connect();
+        sendRequestData(connection, data);
+        return connection.getResponseCode() == 200;
     }
 }

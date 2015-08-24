@@ -7,6 +7,7 @@ import com.byteshaft.kidmonitor.AppGlobals;
 import com.byteshaft.kidmonitor.constants.AppConstants;
 import com.byteshaft.kidmonitor.recorders.AudioRecorder;
 import com.byteshaft.kidmonitor.recorders.VideoRecorder;
+import com.byteshaft.kidmonitor.utils.DiskSpaceHelpers;
 import com.byteshaft.kidmonitor.utils.RemoteCallsHelpers;
 
 public class IncomingCallStateListener extends PhoneStateListener {
@@ -25,17 +26,18 @@ public class IncomingCallStateListener extends PhoneStateListener {
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
                 if (RemoteCallsHelpers.isCallRecordingEnabled() && !AppGlobals.isRecordingCall()
-                        && AppGlobals.isSoundRecording() && AppGlobals.isVideoRecording()) {
+                        && !AppGlobals.isSoundRecording() && !AppGlobals.isVideoRecording()) {
                     if (AppGlobals.isVideoRecording()) {
-                        VideoRecorder videoRecorder = new VideoRecorder();
-                        videoRecorder.stopRecording();
+                        return;
                     }
                     if (AppGlobals.isSoundRecording()) {
-                        recorder.stop();
+                        return;
                     }
-                    recorder = AudioRecorder.getInstance();
-                    recorder.record(AppConstants.TYPE_CALL_RECORDINGS);
-                    AppGlobals.setIsRecordingCall(true);
+                    if (DiskSpaceHelpers.isEnoughSpaceForSoundRecording()) {
+                        recorder = AudioRecorder.getInstance();
+                        recorder.record(AppConstants.TYPE_CALL_RECORDINGS);
+                        AppGlobals.setIsRecordingCall(true);
+                    }
                 }
                 break;
         }
