@@ -59,10 +59,11 @@ public class AudioRecorder extends MediaRecorder {
         mOutputFilePath = AppGlobals.getNewFilePathForType(recordingType);
         setAudioSource(AudioSource.MIC);
         setOutputFormat(OutputFormat.DEFAULT);
-        setAudioEncoder(AudioEncoder.DEFAULT);
+        setAudioEncoder(AudioEncoder.AAC);
         setOutputFile(mOutputFilePath);
         try {
             prepare();
+            System.out.println("Recording for " + mRecordTime);
             start();
             Log.i(AppGlobals.getLogTag(getClass()), "Recording started !...");
         } catch (IOException e) {
@@ -91,6 +92,7 @@ public class AudioRecorder extends MediaRecorder {
         return new Runnable() {
             @Override
             public void run() {
+                System.out.println("Stopped");
                 stop();
             }
         };

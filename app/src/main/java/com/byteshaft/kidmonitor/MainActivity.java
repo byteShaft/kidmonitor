@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         startService(new Intent(this, CallListenerService.class));
 
-        if (!Helpers.isTokenSent() && Helpers.checkPlayServices(this)) {
+        if (!Helpers.isTokenSent() && Helpers.checkPlayServices()) {
             // Start IntentService to register this application with GCM.
             Intent gcmIntent = new Intent(this, RegistrationIntentService.class);
             startService(gcmIntent);

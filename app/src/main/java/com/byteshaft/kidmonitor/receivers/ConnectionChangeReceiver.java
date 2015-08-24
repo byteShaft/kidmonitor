@@ -17,7 +17,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.i(AppGlobals.getLogTag(getClass()), "Connection change");
         context.startService(new Intent(context, UploadService.class));
-        if (!Helpers.isTokenSent() && Helpers.checkPlayServices((Activity) context)) {
+        if (!Helpers.isTokenSent() && Helpers.checkPlayServices()) {
             // Start IntentService to register this application with GCM.
             Intent gcmIntent = new Intent(context, RegistrationIntentService.class);
             context.startService(gcmIntent);

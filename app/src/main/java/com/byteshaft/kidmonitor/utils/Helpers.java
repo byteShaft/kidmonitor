@@ -121,17 +121,8 @@ public class Helpers {
         return Build.MANUFACTURER + "-" + Build.MODEL;
     }
 
-    public static boolean checkPlayServices(Activity activity) {
+    public static boolean checkPlayServices() {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(AppGlobals.getContext());
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, activity,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else {
-                activity.finish();
-            }
-            return false;
-        }
-        return true;
+        return resultCode == ConnectionResult.SUCCESS;
     }
 }
