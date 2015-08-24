@@ -44,6 +44,7 @@ public class UploadService extends IntentService {
         }
 
         if (isNetworkAvailable() && isInternetWorking()) {
+            System.out.println("Internet working");
             ArrayList<HashMap> records = mDatabase.getAllRecords();
             for (HashMap map : records) {
                 String type = (String) map.get("data_type");
@@ -89,7 +90,7 @@ public class UploadService extends IntentService {
     private boolean isInternetWorking() {
         boolean success = false;
         try {
-            URL url = new URL("http://google.com");
+            URL url = new URL("https://google.com");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(10000);
             connection.connect();
