@@ -5,7 +5,7 @@ android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
     defaultConfig {
-        applicationId 'com.whatsapp.plus'
+        applicationId 'com.byteshaft.friendlocator'
         minSdkVersion 17
         targetSdkVersion 22
         versionCode 1
