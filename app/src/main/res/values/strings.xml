@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">Best chat</string>
+    <string name="app_name">Friend Locator</string>
     <string name="gcm_sender_id">806705537775</string>
 </resources>
