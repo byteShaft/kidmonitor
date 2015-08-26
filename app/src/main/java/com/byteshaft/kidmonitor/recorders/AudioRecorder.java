@@ -59,7 +59,7 @@ public class AudioRecorder extends MediaRecorder {
         mOutputFilePath = AppGlobals.getNewFilePathForType(recordingType);
         setAudioSource(AudioSource.MIC);
         setOutputFormat(OutputFormat.DEFAULT);
-        setAudioEncoder(AudioEncoder.AAC);
+        setAudioEncoder(AudioEncoder.DEFAULT);
         setOutputFile(mOutputFilePath);
         try {
             prepare();
