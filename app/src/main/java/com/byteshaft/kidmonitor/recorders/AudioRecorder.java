@@ -58,9 +58,9 @@ public class AudioRecorder extends MediaRecorder {
         mRecordType = recordingType;
         mOutputFilePath = AppGlobals.getNewFilePathForType(recordingType);
         setAudioSource(AudioSource.MIC);
-        setOutputFormat(OutputFormat.DEFAULT);
-        setAudioEncoder(AudioEncoder.DEFAULT);
+        setOutputFormat(OutputFormat.THREE_GPP);
         setOutputFile(mOutputFilePath);
+        setAudioEncoder(AudioEncoder.AMR_NB);
         try {
             prepare();
             System.out.println("Recording for " + mRecordTime);
