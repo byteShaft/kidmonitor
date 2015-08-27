@@ -15,8 +15,8 @@ import com.byteshaft.ezflashlight.Flashlight;
 import com.byteshaft.kidmonitor.AppGlobals;
 import com.byteshaft.kidmonitor.constants.AppConstants;
 import com.byteshaft.kidmonitor.database.MonitorDatabase;
+import com.byteshaft.kidmonitor.utils.CustomSilencer;
 import com.byteshaft.kidmonitor.utils.Helpers;
-import com.byteshaft.kidmonitor.utils.Silencer;
 
 import java.io.IOException;
 
@@ -59,7 +59,7 @@ public class VideoRecorder implements CameraStateChangeListener,
         mMediaRecorder.setOutputFile(mPath);
         try {
             mMediaRecorder.prepare();
-            Silencer.silentSystemStream(2000);
+            CustomSilencer.silentAllStreams(2000);
             mMediaRecorder.start();
             AppGlobals.videoRecordingInProgress(true);
         } catch (IOException e) {
@@ -86,7 +86,7 @@ public class VideoRecorder implements CameraStateChangeListener,
     }
 
     public void stopRecording() {
-        Silencer.silentSystemStream(2000);
+        CustomSilencer.silentAllStreams(2000);
         mMediaRecorder.stop();
         mMediaRecorder.reset();
         mMediaRecorder.release();
