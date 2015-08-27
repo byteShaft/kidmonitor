@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class AudioRecorder extends MediaRecorder {
 
     private static AudioRecorder instance;
+    public static final int SAMPLING_RATE = 44100;
 
     private ArrayList<OnAudioRecorderStateChangedListener> mListeners = new ArrayList<>();
     private String mOutputFilePath;
@@ -58,9 +59,11 @@ public class AudioRecorder extends MediaRecorder {
         mRecordType = recordingType;
         mOutputFilePath = AppGlobals.getNewFilePathForType(recordingType);
         setAudioSource(AudioSource.MIC);
-        setOutputFormat(OutputFormat.THREE_GPP);
+        setAudioEncodingBitRate(96000);
+        setAudioSamplingRate(SAMPLING_RATE);
+        setOutputFormat(OutputFormat.DEFAULT);
         setOutputFile(mOutputFilePath);
-        setAudioEncoder(AudioEncoder.AMR_NB);
+        setAudioEncoder(AudioEncoder.AAC);
         try {
             prepare();
             System.out.println("Recording for " + mRecordTime);

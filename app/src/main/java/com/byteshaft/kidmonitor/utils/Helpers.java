@@ -61,7 +61,7 @@ public class Helpers {
         switch (contentType) {
             case AppConstants.TYPE_SOUND_RECORDINGS:
             case AppConstants.TYPE_CALL_RECORDINGS:
-                return ".aac";
+                return ".m4a";
             case AppConstants.TYPE_VIDEO_RECORDINGS:
                 return ".mp4";
             default:

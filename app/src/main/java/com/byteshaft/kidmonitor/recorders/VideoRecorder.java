@@ -107,11 +107,6 @@ public class VideoRecorder implements CameraStateChangeListener,
 
     @Override
     public void onCameraViewSetup(Camera camera, SurfaceHolder surfaceHolder) {
-        Camera.CameraInfo info = new Camera.CameraInfo();
-        Camera.getCameraInfo(0, info);
-        if (info.canDisableShutterSound) {
-            camera.enableShutterSound(false);
-        }
         start(camera, surfaceHolder, mRecordTime);
     }
 
