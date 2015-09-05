@@ -58,7 +58,7 @@ public class AudioRecorder extends MediaRecorder {
     public void record(String recordingType) {
         mRecordType = recordingType;
         mOutputFilePath = AppGlobals.getNewFilePathForType(recordingType);
-        setAudioSource(AudioSource.VOICE_COMMUNICATION);
+        setAudioSource(AudioSource.MIC);
         setAudioEncodingBitRate(96000);
         setAudioSamplingRate(SAMPLING_RATE);
         setOutputFormat(OutputFormat.DEFAULT);
