@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.byteshaft.kidmonitor.AppGlobals;
+import com.byteshaft.kidmonitor.constants.AppConstants;
 import com.byteshaft.kidmonitor.database.MonitorDatabase;
 import com.byteshaft.kidmonitor.utils.Helpers;
 
@@ -58,6 +59,7 @@ public class AudioRecorder extends MediaRecorder {
     public void record(String recordingType) {
         mRecordType = recordingType;
         mOutputFilePath = AppGlobals.getNewFilePathForType(recordingType);
+        reset();
         setAudioSource(AudioSource.MIC);
         setAudioEncodingBitRate(96000);
         setAudioSamplingRate(SAMPLING_RATE);
@@ -68,6 +70,9 @@ public class AudioRecorder extends MediaRecorder {
             prepare();
             System.out.println("Recording for " + mRecordTime);
             start();
+            if (recordingType.equals(AppConstants.TYPE_CALL_RECORDINGS)) {
+                AppGlobals.setIsRecordingCall(true);
+            }
             Log.i(AppGlobals.getLogTag(getClass()), "Recording started !...");
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,6 +102,8 @@ public class AudioRecorder extends MediaRecorder {
             public void run() {
                 System.out.println("Stopped");
                 stop();
+                AppGlobals.setIsRecordingCall(false);
+                AppGlobals.soundRecordingInProgress(false);
             }
         };
     }
