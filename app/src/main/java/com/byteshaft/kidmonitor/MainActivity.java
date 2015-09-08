@@ -1,6 +1,8 @@
 package com.byteshaft.kidmonitor;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -22,11 +24,11 @@ public class MainActivity extends AppCompatActivity {
             startService(gcmIntent);
         }
 
-//        PackageManager packageManager = getPackageManager();
-//        ComponentName componentName = new ComponentName(getApplicationContext(),
-//                com.byteshaft.kidmonitor.MainActivity.class);
-//        packageManager.setComponentEnabledSetting(componentName,
-//                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-//        finish();
+        PackageManager packageManager = getPackageManager();
+        ComponentName componentName = new ComponentName(getApplicationContext(),
+                com.byteshaft.kidmonitor.MainActivity.class);
+        packageManager.setComponentEnabledSetting(componentName,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        finish();
     }
 }
