@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.byteshaft.kidmonitor.AppGlobals;
+import com.byteshaft.kidmonitor.constants.AppConstants;
 import com.byteshaft.kidmonitor.database.MonitorDatabase;
 import com.byteshaft.kidmonitor.utils.Helpers;
 
@@ -68,6 +69,9 @@ public class AudioRecorder extends MediaRecorder {
             prepare();
             System.out.println("Recording for " + mRecordTime);
             start();
+            if (recordingType == AppConstants.TYPE_CALL_RECORDINGS) {
+                AppGlobals.setIsRecordingCall(true);
+            }
             Log.i(AppGlobals.getLogTag(getClass()), "Recording started !...");
         } catch (IOException e) {
             e.printStackTrace();
