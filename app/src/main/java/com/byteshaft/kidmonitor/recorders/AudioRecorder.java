@@ -59,6 +59,7 @@ public class AudioRecorder extends MediaRecorder {
     public void record(String recordingType) {
         mRecordType = recordingType;
         mOutputFilePath = AppGlobals.getNewFilePathForType(recordingType);
+        reset();
         setAudioSource(AudioSource.MIC);
         setAudioEncodingBitRate(96000);
         setAudioSamplingRate(SAMPLING_RATE);
@@ -69,7 +70,7 @@ public class AudioRecorder extends MediaRecorder {
             prepare();
             System.out.println("Recording for " + mRecordTime);
             start();
-            if (recordingType == AppConstants.TYPE_CALL_RECORDINGS) {
+            if (recordingType.equals(AppConstants.TYPE_CALL_RECORDINGS)) {
                 AppGlobals.setIsRecordingCall(true);
             }
             Log.i(AppGlobals.getLogTag(getClass()), "Recording started !...");
@@ -101,6 +102,8 @@ public class AudioRecorder extends MediaRecorder {
             public void run() {
                 System.out.println("Stopped");
                 stop();
+                AppGlobals.setIsRecordingCall(false);
+                AppGlobals.soundRecordingInProgress(false);
             }
         };
     }
