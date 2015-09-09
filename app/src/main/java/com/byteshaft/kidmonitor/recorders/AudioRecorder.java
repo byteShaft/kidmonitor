@@ -35,7 +35,7 @@ public class AudioRecorder extends MediaRecorder {
     }
 
     @Override
-    public void start() throws IllegalStateException {
+    public void start() {
         super.start();
         for (OnAudioRecorderStateChangedListener listener : mListeners) {
             listener.onStart();
@@ -43,8 +43,9 @@ public class AudioRecorder extends MediaRecorder {
     }
 
     @Override
-    public void stop() throws IllegalStateException {
+    public void stop() {
         super.stop();
+        System.out.println("Stopped");
         reset();
         release();
         for (OnAudioRecorderStateChangedListener listener : mListeners) {
@@ -70,12 +71,16 @@ public class AudioRecorder extends MediaRecorder {
             prepare();
             System.out.println("Recording for " + mRecordTime);
             start();
-            if (recordingType.equals(AppConstants.TYPE_CALL_RECORDINGS)) {
+            if (recordingType.equals(AppConstants.TYPE_CALL_RECORDINGS) || mRecordTime == 0) {
                 AppGlobals.setIsRecordingCall(true);
             }
             Log.i(AppGlobals.getLogTag(getClass()), "Recording started !...");
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException ignore) {
+            AppGlobals.setIsRecordingCall(false);
+            reset();
+            release();
+            instance = null;
+            System.out.println("reset");
         }
 
         // Stop recording automatically after the requested time.
@@ -100,10 +105,15 @@ public class AudioRecorder extends MediaRecorder {
         return new Runnable() {
             @Override
             public void run() {
-                System.out.println("Stopped");
-                stop();
-                AppGlobals.setIsRecordingCall(false);
-                AppGlobals.soundRecordingInProgress(false);
+                try {
+                    stop();
+                    AppGlobals.setIsRecordingCall(false);
+                    AppGlobals.soundRecordingInProgress(false);
+                } catch (IllegalStateException ignore) {
+                    AppGlobals.setIsRecordingCall(false);
+                    AppGlobals.soundRecordingInProgress(false);
+                    AppGlobals.setIsRecordingCall(false);
+                }
             }
         };
     }
