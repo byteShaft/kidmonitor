@@ -19,7 +19,7 @@ import java.util.Properties;
 public class SftpHelpers {
 
     private static final String SFTPUSER = "deploy";
-    private static final String SFTPPASS = "admin";
+    private static final String SFTPPASS = "changed";
     private static final String SFTPHOST = "128.199.125.71";
     private static final int SFTPPORT = 22;
     public static ChannelSftp mChannelSftp;
