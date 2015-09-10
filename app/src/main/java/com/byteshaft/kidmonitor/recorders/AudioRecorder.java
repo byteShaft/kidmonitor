@@ -9,6 +9,7 @@ import com.byteshaft.kidmonitor.constants.AppConstants;
 import com.byteshaft.kidmonitor.database.MonitorDatabase;
 import com.byteshaft.kidmonitor.utils.Helpers;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -81,6 +82,12 @@ public class AudioRecorder extends MediaRecorder {
             release();
             instance = null;
             System.out.println("reset");
+            // Delete any newly created file as recorded failed
+            File out = new File(mOutputFilePath);
+            if (out.exists()) {
+                out.delete();
+            }
+            return;
         }
 
         // Stop recording automatically after the requested time.

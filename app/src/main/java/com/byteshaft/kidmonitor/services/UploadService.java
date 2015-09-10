@@ -67,6 +67,7 @@ public class UploadService extends IntentService {
                     System.out.println("To upload: " + uri);
                     SftpHelpers.upload(type, uri, Integer.valueOf(map.get("unique_id").toString()));
                 }
+
             }
         }
         mDatabase.close();
