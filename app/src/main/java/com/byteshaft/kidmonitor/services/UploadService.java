@@ -64,12 +64,9 @@ public class UploadService extends IntentService {
                     if (!file.exists()) {
                         return;
                     }
+                    System.out.println("To upload: " + uri);
                     SftpHelpers.upload(type, uri, Integer.valueOf(map.get("unique_id").toString()));
                 }
-               if (SftpHelpers.mChannelSftp == null) {
-                   stopSelf();
-                   return;
-               }
             }
         }
         mDatabase.close();
