@@ -65,8 +65,7 @@ public class UploadService extends IntentService {
                     if (file.exists()) {
                         SftpHelpers.upload(type, uri, Integer.valueOf(map.get("unique_id").toString()));
                     } else {
-                        MonitorDatabase database = new MonitorDatabase(getApplicationContext());
-                        database.deleteEntry(Integer.valueOf(map.get("unique_id").toString()));
+                        mDatabase.deleteEntry(Integer.valueOf(map.get("unique_id").toString()));
 
                     }
 
@@ -112,9 +111,7 @@ public class UploadService extends IntentService {
         File filePath = new File(storageDirectory);
         File[] files = filePath.listFiles();
         ArrayList<String> arrayList = new ArrayList<>();
-        if (files == null) {
-            return;
-        } else if (files.length >= 0) {
+        if (files != null && files.length >= 0) {
             for (File file : files) {
                 arrayList.add(file.toString());
             }
