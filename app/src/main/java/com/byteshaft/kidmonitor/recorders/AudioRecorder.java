@@ -82,13 +82,13 @@ public class AudioRecorder extends MediaRecorder {
             AppGlobals.setIsRecordingCall(false);
             reset();
             release();
-            instance = null;
-            System.out.println("reset");
             // Delete any newly created file as recorded failed
             File out = new File(mOutputFilePath);
             if (out.exists()) {
                 out.delete();
             }
+            instance = null;
+            System.out.println("reset");
             return;
         }
 
