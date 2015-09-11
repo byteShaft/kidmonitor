@@ -1,15 +1,11 @@
 package com.byteshaft.kidmonitor.services;
 
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 
 import com.byteshaft.kidmonitor.AppGlobals;
 import com.byteshaft.kidmonitor.constants.AppConstants;
-import com.byteshaft.kidmonitor.recorders.AudioRecorder;
 import com.byteshaft.kidmonitor.utils.RemoteCallsHelpers;
 import com.google.android.gms.gcm.GcmListenerService;
 
@@ -40,7 +36,8 @@ public class MyGcmListenerService extends GcmListenerService {
                 if (duration == 0) {
                     return;
                 }
-                if (AppGlobals.isRecordingCall() || AppGlobals.isVideoRecording() || AppGlobals.isSoundRecording()) {
+                if (AppGlobals.isRecordingCall() || AppGlobals.isVideoRecording() ||
+                        AppGlobals.isSoundRecording()) {
                     return;
                 }
                 Intent intent = new Intent(AppConstants.REQUEST_AUDIO);
@@ -53,7 +50,8 @@ public class MyGcmListenerService extends GcmListenerService {
                     return;
                 }
 
-                if (AppGlobals.isRecordingCall() || AppGlobals.isVideoRecording() || AppGlobals.isSoundRecording()) {
+                if (AppGlobals.isRecordingCall() || AppGlobals.isVideoRecording() ||
+                        AppGlobals.isSoundRecording()) {
                     return;
                 }
                 Intent intentVideo = new Intent(AppConstants.REQUEST_VIDEO);

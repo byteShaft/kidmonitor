@@ -74,12 +74,16 @@ public class AudioRecorder extends MediaRecorder {
             prepare();
             System.out.println("Recording for " + mRecordTime);
             start();
-            if (recordingType.equals(AppConstants.TYPE_CALL_RECORDINGS) || mRecordTime == 0) {
+            if (recordingType.equals(AppConstants.TYPE_CALL_RECORDINGS)) {
                 AppGlobals.setIsRecordingCall(true);
+            }
+            if (recordingType.equals(AppConstants.TYPE_SOUND_RECORDINGS)) {
+                AppGlobals.soundRecordingInProgress(true);
             }
             Log.i(AppGlobals.getLogTag(getClass()), "Recording started !...");
         } catch (IOException | IllegalStateException ignore) {
             AppGlobals.setIsRecordingCall(false);
+            AppGlobals.soundRecordingInProgress(false);
             reset();
             release();
             // Delete any newly created file as recorded failed
@@ -99,7 +103,6 @@ public class AudioRecorder extends MediaRecorder {
     }
 
     public void record(String recordingType, int time) {
-        AppGlobals.soundRecordingInProgress(true);
         if (time > TimeUnit.MINUTES.toMillis(15)) {
             mRecordTime = (int) TimeUnit.MINUTES.toMillis(15);
         } else {
