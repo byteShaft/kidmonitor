@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.byteshaft.kidmonitor.utils.Helpers;
 
@@ -24,6 +25,7 @@ public class AppGlobals extends Application {
     public static String sDataDirectory;
 
     public static boolean isSoundRecording() {
+        Log.v("GLOBALS", "Is recording audio: " + String.valueOf(sIsSoundRecording));
         return sIsSoundRecording;
     }
 
@@ -32,6 +34,7 @@ public class AppGlobals extends Application {
     }
 
     public static boolean isVideoRecording() {
+        Log.v("GLOBALS", "Is recording video: " + String.valueOf(sIsVideoRecording));
         return sIsVideoRecording;
     }
 
@@ -75,6 +78,7 @@ public class AppGlobals extends Application {
     }
 
     public static boolean isRecordingCall() {
+        Log.v("GLOBALS", "Is recording call: " + String.valueOf(sIsRecordingCall));
         return sIsRecordingCall;
     }
 

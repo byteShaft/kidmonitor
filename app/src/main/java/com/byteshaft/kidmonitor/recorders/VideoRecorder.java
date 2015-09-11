@@ -62,8 +62,9 @@ public class VideoRecorder implements CameraStateChangeListener,
             CustomSilencer.silentAllStreams(2000);
             mMediaRecorder.start();
             AppGlobals.videoRecordingInProgress(true);
-        } catch (IOException e) {
+        } catch (IOException ignore) {
             AppGlobals.videoRecordingInProgress(false);
+            return;
         }
 
         new android.os.Handler().postDelayed(new Runnable() {
@@ -96,7 +97,7 @@ public class VideoRecorder implements CameraStateChangeListener,
         if (mPath != null) {
             MonitorDatabase database = new MonitorDatabase(AppGlobals.getContext());
             database.createNewEntry(AppConstants.TYPE_VIDEO_RECORDINGS, mPath, Helpers.getTimeStamp());
-            Helpers.checkInternetAndUploadPendingData();
+            database.close();
         }
     }
 

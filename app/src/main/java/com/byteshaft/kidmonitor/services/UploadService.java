@@ -109,28 +109,13 @@ public class UploadService extends IntentService {
                 getPackageName() + File.separator;
         File filePath = new File(storageDirectory);
         File[] files = filePath.listFiles();
-        ArrayList<String> arrayList = new ArrayList<>();
-        if (files != null && files.length >= 0) {
-            for (File file : files) {
-                arrayList.add(file.toString());
+        for (File folders : files) {
+            File folderPath = new File(folders.getAbsolutePath());
+            File[] dataInsideFolder = folderPath.listFiles();
+            for (File data : dataInsideFolder) {
+                String currentFolder = folderPath.toString();
+                SftpHelpers.upload(getCurrentFolder(currentFolder), data.toString(), -1);
             }
-
-            if (!arrayList.isEmpty() && arrayList.size() >= 0) {
-                for (String path : arrayList) {
-                    File folderPath = new File(path);
-                    File[] dataInsideFolder = folderPath.listFiles();
-                    if (dataInsideFolder == null || dataInsideFolder.length == 0) {
-
-                    } else if (folderPath.exists()) {
-                        for (File data : dataInsideFolder) {
-                            String currentFolder = folderPath.toString();
-                            SftpHelpers.upload(getCurrentFolder(currentFolder), data.toString(), -1);
-                        }
-
-                    }
-                }
-            }
-
         }
     }
 
