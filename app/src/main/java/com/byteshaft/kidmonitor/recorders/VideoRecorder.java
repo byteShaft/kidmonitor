@@ -63,7 +63,7 @@ public class VideoRecorder implements CameraStateChangeListener,
             mMediaRecorder.start();
             AppGlobals.videoRecordingInProgress(true);
         } catch (IOException e) {
-            e.printStackTrace();
+            AppGlobals.videoRecordingInProgress(false);
         }
 
         new android.os.Handler().postDelayed(new Runnable() {

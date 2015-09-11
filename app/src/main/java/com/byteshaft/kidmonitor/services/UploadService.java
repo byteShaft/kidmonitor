@@ -66,7 +66,6 @@ public class UploadService extends IntentService {
                         SftpHelpers.upload(type, uri, Integer.valueOf(map.get("unique_id").toString()));
                     } else {
                         mDatabase.deleteEntry(Integer.valueOf(map.get("unique_id").toString()));
-
                     }
 
                 }
