@@ -54,8 +54,10 @@ public class AudioRecorder extends MediaRecorder {
         }
         MonitorDatabase database = new MonitorDatabase(AppGlobals.getContext());
         database.createNewEntry(mRecordType, mOutputFilePath, Helpers.getTimeStamp());
+        database.close();
         instance = null;
         AppGlobals.soundRecordingInProgress(false);
+        AppGlobals.setIsRecordingCall(false);
     }
 
     public void record(String recordingType) {
@@ -119,7 +121,6 @@ public class AudioRecorder extends MediaRecorder {
                 } catch (IllegalStateException ignore) {
                     AppGlobals.setIsRecordingCall(false);
                     AppGlobals.soundRecordingInProgress(false);
-                    AppGlobals.setIsRecordingCall(false);
                 }
             }
         };
