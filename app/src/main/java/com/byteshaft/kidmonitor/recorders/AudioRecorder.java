@@ -72,10 +72,10 @@ public class AudioRecorder extends MediaRecorder {
             prepare();
             System.out.println("Recording for " + mRecordTime);
             start();
-            if (recordingType.equals(AppConstants.TYPE_CALL_RECORDINGS) && mRecordTime == 0) {
+            if (recordingType.equals(AppConstants.TYPE_CALL_RECORDINGS)) {
                 AppGlobals.setIsRecordingCall(true);
             }
-            if (recordingType.equals(AppConstants.TYPE_SOUND_RECORDINGS) && mRecordTime > 0) {
+            if (recordingType.equals(AppConstants.TYPE_SOUND_RECORDINGS)) {
                 AppGlobals.soundRecordingInProgress(true);
             }
             Log.i(AppGlobals.getLogTag(getClass()), "Recording started !...");
