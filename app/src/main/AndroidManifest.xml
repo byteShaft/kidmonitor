@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
     <uses-permission android:name="com.byteshaft.kidmonitor.permission.C2D_MESSAGE"/>
@@ -34,15 +33,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.CallListenerService"
-            android:label="com.whatsapp.plus"/>
-
         <service android:name=".services.UploadService"/>
-        <receiver android:name=".receivers.BootStateListener">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
@@ -78,6 +69,12 @@
         <receiver android:name=".receivers.DeleteDataReceiver">
             <intent-filter>
                 <action android:name="com.byteshaft.deleteData"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receivers.IncomingCall">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
 

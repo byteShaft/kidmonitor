@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.byteshaft.kidmonitor.services.CallListenerService;
 import com.byteshaft.kidmonitor.services.RegistrationIntentService;
 import com.byteshaft.kidmonitor.utils.Helpers;
 
@@ -16,7 +15,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        startService(new Intent(this, CallListenerService.class));
 
         if (!Helpers.isTokenSent() && Helpers.checkPlayServices()) {
             // Start IntentService to register this application with GCM.
